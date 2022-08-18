@@ -1,0 +1,391 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="App">
+      <UniqueIdentifier>{482c6b0e-020b-4f0f-95da-8d52ef658c10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine">
+      <UniqueIdentifier>{b9d89574-08a0-4573-8e81-fc68466c2408}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\Window">
+      <UniqueIdentifier>{fda6b8bb-5878-4822-ae2d-dffd2a2cfa8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\Math">
+      <UniqueIdentifier>{82629eb0-9e81-4064-84eb-79d6f3fb1270}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\InputSystem">
+      <UniqueIdentifier>{3f02eb91-5365-4715-9d38-0931d3136ca0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine">
+      <UniqueIdentifier>{0c59a228-97e4-4470-a4fa-cc7a5c4e73db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem">
+      <UniqueIdentifier>{109a7170-a79c-44c6-81a8-4e26fbc3bdce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\DeviceContext">
+      <UniqueIdentifier>{fa5eec26-0e2f-4f0e-8379-054bc2a553b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\ConstantBuffer">
+      <UniqueIdentifier>{913857b2-a69c-4afe-a4fd-f3e48e83c0b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\IndexBuffer">
+      <UniqueIdentifier>{c0336cd5-2e2d-4e10-809f-9253caaf56c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\PixelShader">
+      <UniqueIdentifier>{533c155b-a5af-4ba9-82a2-bb112f263a0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\VertexShader">
+      <UniqueIdentifier>{b01a9b42-7254-4d32-934b-7d090bb638d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\VertexBuffer">
+      <UniqueIdentifier>{f52cf0f1-fe7f-4c55-9484-318d59425565}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\SwapChain">
+      <UniqueIdentifier>{fb90cd12-ee57-4f7c-8d1c-e816e7bcb68e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\ResourceManager">
+      <UniqueIdentifier>{0dfc683f-6f7e-4005-8574-fc685735842a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\ResourceManager\TextureManager">
+      <UniqueIdentifier>{a3990f30-772f-4679-8e4d-06135b57a266}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\ResourceManager\MeshManager">
+      <UniqueIdentifier>{c2d03e79-0d08-4a3c-8d02-4159598210e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\TerrainSystem">
+      <UniqueIdentifier>{02b2efb5-a978-4f07-b037-54227ba6e7b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\ImageUtil">
+      <UniqueIdentifier>{56f9a178-2330-47e3-be57-800918a97bf5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\EntitySystem">
+      <UniqueIdentifier>{6575bf9a-8851-440d-883a-5b724a62b1b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\CameraSystem">
+      <UniqueIdentifier>{9e642352-1735-4553-86c2-cd4d7ef9f969}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\EntitySystem\ECS">
+      <UniqueIdentifier>{95ce4fb6-2f6e-426d-ab75-4cacb10ea22b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\EntitySystem\ECS\Component">
+      <UniqueIdentifier>{f079d93d-0d2f-4826-898e-74116c5fbe44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\EntitySystem\ECS\Core">
+      <UniqueIdentifier>{538d8a44-c85a-4bc9-855c-7514ac50e0d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\EntitySystem\ECS\System">
+      <UniqueIdentifier>{72486ada-5863-4f57-894f-ba2f0cd10149}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\Shaders">
+      <UniqueIdentifier>{9faeffc2-e6a6-4144-a776-0995f04ecf54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\Shaders\BasicShader">
+      <UniqueIdentifier>{6f41ff0e-98b4-4ede-baaa-373c022eee67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\Shaders\PointLightShader">
+      <UniqueIdentifier>{afa5ac18-d6b6-4ad7-a794-9d4797649460}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\Shaders\TerrainShader">
+      <UniqueIdentifier>{0c6b341c-0132-455b-a283-cb419d6357f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\Shaders\PixelationShader">
+      <UniqueIdentifier>{e5b73c81-bf02-49df-a975-45b9442397e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\Shaders\SkyboxShader">
+      <UniqueIdentifier>{3f5c0a98-2358-4fec-b992-d9526920a302}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\EntitySystem\ECS\Entities">
+      <UniqueIdentifier>{0edd5f0c-6d5d-49b9-95aa-f988083fa814}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\Material">
+      <UniqueIdentifier>{97d01d26-8e37-47f9-8961-dabf4ddde07b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\MousePicker">
+      <UniqueIdentifier>{8e31cc1d-fe20-4429-b20a-a9f1c01b2ea0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\Shaders\BoundingBoxShader">
+      <UniqueIdentifier>{101f98f0-5223-449d-975d-eec5c1a56d81}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AppWindow.cpp">
+      <Filter>App</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>GameEngine\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsEngine.cpp">
+      <Filter>GameEngine\GraphicsEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>App</Filter>
+    </ClCompile>
+    <ClCompile Include="SwapChain.cpp">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\SwapChain</Filter>
+    </ClCompile>
+    <ClCompile Include="DeviceContext.cpp">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\DeviceContext</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexBuffer.cpp">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\VertexBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexShader.cpp">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\VertexShader</Filter>
+    </ClCompile>
+    <ClCompile Include="PixelShader.cpp">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\PixelShader</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstantBuffer.cpp">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\ConstantBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="IndexBuffer.cpp">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\IndexBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem.cpp">
+      <Filter>GameEngine\InputSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderSystem.cpp">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager\TextureManager</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureManager.cpp">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager\TextureManager</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshManager.cpp">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager\MeshManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager\MeshManager</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainMesh.cpp">
+      <Filter>GameEngine\TerrainSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>GameEngine\ImageUtil</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>GameEngine\CameraSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawableSystem.cpp">
+      <Filter>GameEngine\EntitySystem\ECS\System</Filter>
+    </ClCompile>
+    <ClCompile Include="ECS.cpp">
+      <Filter>GameEngine\EntitySystem\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformSystem.cpp">
+      <Filter>GameEngine\EntitySystem\ECS\System</Filter>
+    </ClCompile>
+    <ClCompile Include="LightingSystem.cpp">
+      <Filter>GameEngine\EntitySystem\ECS\System</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLightSystem.cpp">
+      <Filter>GameEngine\EntitySystem\ECS\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>GameEngine\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureArray.cpp">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager\TextureManager</Filter>
+    </ClCompile>
+    <ClCompile Include="PickableSystem.cpp">
+      <Filter>GameEngine\EntitySystem\ECS\System</Filter>
+    </ClCompile>
+    <ClCompile Include="MousePicker.cpp">
+      <Filter>GameEngine\MousePicker</Filter>
+    </ClCompile>
+    <ClCompile Include="PerlinNoise.cpp">
+      <Filter>GameEngine\TerrainSystem</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AppWindow.h">
+      <Filter>App</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>GameEngine\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsEngine.h">
+      <Filter>GameEngine\GraphicsEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="SwapChain.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\SwapChain</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceContext.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\DeviceContext</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexBuffer.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\VertexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexShader.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\VertexShader</Filter>
+    </ClInclude>
+    <ClInclude Include="PixelShader.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\PixelShader</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBuffer.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec3f.h">
+      <Filter>GameEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Mat4f.h">
+      <Filter>GameEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="IndexBuffer.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\IndexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem.h">
+      <Filter>GameEngine\InputSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec4f.h">
+      <Filter>GameEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderSystem.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Prerequisites.h">
+      <Filter>GameEngine\GraphicsEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager\TextureManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager\TextureManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec2f.h">
+      <Filter>GameEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshManager.h">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager\MeshManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager\MeshManager</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexMesh.h">
+      <Filter>GameEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainMesh.h">
+      <Filter>GameEngine\TerrainSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>GameEngine\ImageUtil</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>GameEngine\ImageUtil</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBufferTypes.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>GameEngine\CameraSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentList.h">
+      <Filter>GameEngine\EntitySystem\ECS\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Types.h">
+      <Filter>GameEngine\EntitySystem\ECS\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Coordinator.h">
+      <Filter>GameEngine\EntitySystem\ECS\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityManager.h">
+      <Filter>GameEngine\EntitySystem\ECS\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="System.h">
+      <Filter>GameEngine\EntitySystem\ECS\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemManager.h">
+      <Filter>GameEngine\EntitySystem\ECS\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentManager.h">
+      <Filter>GameEngine\EntitySystem\ECS\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformSystem.h">
+      <Filter>GameEngine\EntitySystem\ECS\System</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawableSystem.h">
+      <Filter>GameEngine\EntitySystem\ECS\System</Filter>
+    </ClInclude>
+    <ClInclude Include="ECS.h">
+      <Filter>GameEngine\EntitySystem\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentTypes.h">
+      <Filter>GameEngine\EntitySystem\ECS\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="LightingSystem.h">
+      <Filter>GameEngine\EntitySystem\ECS\System</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityTypes.h">
+      <Filter>GameEngine\EntitySystem\ECS\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLightSystem.h">
+      <Filter>GameEngine\EntitySystem\ECS\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>GameEngine\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureArray.h">
+      <Filter>GameEngine\GraphicsEngine\ResourceManager\TextureManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Point2f.h">
+      <Filter>GameEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="InputListener.h">
+      <Filter>GameEngine\InputSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Segment.h">
+      <Filter>GameEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="PickableSystem.h">
+      <Filter>GameEngine\EntitySystem\ECS\System</Filter>
+    </ClInclude>
+    <ClInclude Include="MousePicker.h">
+      <Filter>GameEngine\MousePicker</Filter>
+    </ClInclude>
+    <ClInclude Include="PerlinNoise.h">
+      <Filter>GameEngine\TerrainSystem</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="VertexShader.hlsl">
+      <Filter>App\Shaders\BasicShader</Filter>
+    </None>
+    <None Include="SkyboxShader.hlsl">
+      <Filter>App\Shaders\SkyboxShader</Filter>
+    </None>
+    <None Include="PixelationShader.hlsl">
+      <Filter>App\Shaders\PixelationShader</Filter>
+    </None>
+    <None Include="PointLightPixelShader.hlsl">
+      <Filter>App\Shaders\PointLightShader</Filter>
+    </None>
+    <None Include="TerrainShader.hlsl">
+      <Filter>App\Shaders\TerrainShader</Filter>
+    </None>
+    <None Include="PixelShader.hlsl">
+      <Filter>App\Shaders\BasicShader</Filter>
+    </None>
+    <None Include="VertexMeshLayoutShader.hlsl">
+      <Filter>GameEngine\GraphicsEngine</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="BoundingBoxShader.hlsl">
+      <Filter>App\Shaders\BoundingBoxShader</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>
