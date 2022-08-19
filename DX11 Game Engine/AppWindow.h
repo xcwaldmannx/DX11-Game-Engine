@@ -20,6 +20,7 @@
 #include "Mat4f.h"
 
 #include "TerrainMesh.h"
+#include "TerrainManager.h"
 
 #include "Camera.h"
 
@@ -77,6 +78,8 @@ private:
     PixelShaderPtr boundingBoxShader = nullptr;
 
     // Terrain
+    TerrainManager* terrainManager;
+
     TerrainMesh tm{};
     TexturePtr grassTexture = nullptr, dirtTexture = nullptr, pathTexture = nullptr, pathmapTexture = nullptr, heightmapTexture = nullptr;
     TextureArrayPtr terrainTextures = nullptr;
@@ -112,6 +115,7 @@ private:
     float rotY = 0.0f;
 
     // camera direction
+    bool flyingMode = false;
     float forward = 0.0f;
     float right = 0.0f;
     float up = 0.0f;

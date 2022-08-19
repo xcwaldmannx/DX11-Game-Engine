@@ -38,7 +38,11 @@ float4 main(PS_INPUT input) : SV_TARGET{
 	float4 heightmapColor = textures[4].Sample(TextureSampler, gridPosition);
 	float4 textureColor;
 
-	textureColor = lerp(grassColor, dirtColor, heightmapColor.x);
+	textureColor = grassColor;
+
+	if (input.worldPosition.y > 128) {
+		textureColor = lerp(grassColor, dirtColor, min(1.0, (input.worldPosition.y - 128.0) / 16.0));
+	}
 
 	if (pathmapColor.x != 0) {
 		textureColor = lerp(textureColor, pathColor, pathmapColor.x);

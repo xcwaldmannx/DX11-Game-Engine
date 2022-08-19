@@ -6,7 +6,7 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 
-#include "Vec3f.h";
+#include "Vec3f.h"
 
 struct MaterialSlot {
 	size_t startIndex = 0;

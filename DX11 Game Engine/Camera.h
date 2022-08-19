@@ -11,14 +11,14 @@ public:
 	~Camera();
 
 	void updateView(Window* window, TerrainMesh tm, long double deltaTime);
-	void updateMovement(float forward, float right, float up);
+	void updateMovement(float forward, float right, float up, bool flyingMode);
 	void updateMouse(float rotX, float rotY);
 	const Vec3f& getWorldPosition();
 	Vec3f getMousePosition();
 
-	Mat4f getWorld();
-	Mat4f getView();
-	Mat4f getProj();
+	Mat4f& getWorld();
+	Mat4f& getView();
+	Mat4f& getProj();
 
 private:
 	Window* m_window = nullptr;
@@ -29,7 +29,7 @@ private:
 	Mat4f m_projCamera{};
 
 	// position
-	Vec3f worldPosition;
+	Vec3f m_worldPosition;
 
 	// time
 	long double m_deltaTime = 0.0;
@@ -39,6 +39,7 @@ private:
 	float m_rotY = 0.0f;
 
 	// walking/flying
+	bool m_flyingMode = false;
 	float m_forward = 0.0f;
 	float m_right = 0.0f;
 	float m_up = 0.0f;

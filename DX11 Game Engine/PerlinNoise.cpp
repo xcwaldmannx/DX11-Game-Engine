@@ -3,17 +3,29 @@
 #include <random>
 #include <algorithm>
 
-PerlinNoise::PerlinNoise(unsigned int width, unsigned int height) : width(width), height(height) {
+PerlinNoise::PerlinNoise() {
 }
 
 PerlinNoise::~PerlinNoise() {
 }
 
-float* PerlinNoise::generateNoise1D(unsigned int length, float* output) {
+float* PerlinNoise::generateSeed1D(unsigned int length, bool overlap, float* output) {
 	output = new float[length];
 	float* result = new float[length];
 
-	for (int i = 0; i < length; i++) {
+	int start = 0;
+	int end = length;
+
+	if (overlap && length > 1) {
+		start = 1;
+		end = length - 1;
+		result[start] = 0.5f;
+		result[end] = 0.5f;
+		output[start] = 0.5f;
+		output[end] = 0.5f;
+	}
+
+	for (int i = start; i < end; i++) {
 		result[i] = (float) rand() / (float) RAND_MAX;
 		output[i] = result[i];
 	}
@@ -21,23 +33,47 @@ float* PerlinNoise::generateNoise1D(unsigned int length, float* output) {
 	return result;
 }
 
-float* PerlinNoise::generateNoise2D(unsigned int length, float* output) {
+float** PerlinNoise::generateSeed2D(unsigned int length, bool overlap, float** output) {
 	unsigned int size = length * length;
-	output = new float[size];
-	float* result = new float[size];
 
-	for (int i = 0; i < size; i++) {
-		result[i] = (float)rand() / (float)RAND_MAX;
-		output[i] = result[i];
+	output = new float*[length];
+	float** result = new float*[size];
+
+	for (int i = 0; i < length; i++) {
+		output[i] = new float[length];
+		result[i] = new float[length];
+	}
+
+	int start = 0;
+	int end = length;
+
+	if (overlap && length > 1) {
+		start = 1;
+		end = length - 1;
+		for (int i = 0; i < length; i++) {
+			result[i][0] = 0.5f;
+			result[0][i] = 0.5f;
+			result[length - 1][i] = 0.5f;
+			result[i][length - 1] = 0.5f;
+
+			output[i][0] = 0.5f;
+			output[0][i] = 0.5f;
+			output[length - 1][i] = 0.5f;
+			output[i][length - 1] = 0.5f;
+		}
+	}
+
+	for (int i = start; i < end; i++) {
+		for (int j = start; j < end; j++) {
+			result[i][j] = (float)rand() / (float)RAND_MAX;
+			output[i][j] = result[i][j];
+		}
 	}
 
 	return result;
 }
 
 float* PerlinNoise::generateNoise1D(unsigned int length, float* seed, unsigned int octaves, float* output) {
-	width = length;
-	height = length;
-
 	output = new float[length];
 	float* result = new float[length];
 
@@ -65,14 +101,17 @@ float* PerlinNoise::generateNoise1D(unsigned int length, float* seed, unsigned i
 	return result;
 }
 
-float* PerlinNoise::generateNoise2D(unsigned int length, float* seed, unsigned int octaves, float* output) {
-	width = length;
-	height = length;
-
+float** PerlinNoise::generateNoise2D(unsigned int length, float** seed, unsigned int octaves, float** output) {
 	unsigned int size = length * length;
 
-	output = new float[size];
-	float* result = new float[size];
+	// allocate space
+	output = new float*[length];
+	float** result = new float*[length];
+
+	for (int i = 0; i < length; i++) {
+		output[i] = new float[length];
+		result[i] = new float[length];
+	}
 
 	for (int x = 0; x < length; x++) {
 		for (int y = 0; y < length; y++) {
@@ -92,26 +131,24 @@ float* PerlinNoise::generateNoise2D(unsigned int length, float* seed, unsigned i
 				float blendX = (float) (x - sampleX1) / (float) pitch;
 				float blendY = (float) (y - sampleY1) / (float) pitch;
 
-				float sampleT = (1.0f - blendX) * seed[sampleY1 * length + sampleX1] + blendX * seed[sampleY1 * length + sampleX2];
-				float sampleB = (1.0f - blendX) * seed[sampleY2 * length + sampleX1] + blendX * seed[sampleY2 * length + sampleX2];
+				float sampleT = (1.0f - blendX) * seed[sampleX1][sampleY1] + blendX * seed[sampleX2][sampleY1];
+				float sampleB = (1.0f - blendX) * seed[sampleX1][sampleY2] + blendX * seed[sampleX2][sampleY2];
 
 				noiseValue += (blendY * (sampleB - sampleT) + sampleT) * scale;
 				scaleAccumulation += scale;
 				scale /= 2.0f;
 			}
 
-			result[y * length + x] = noiseValue / scaleAccumulation;
-			output[y * length + x] = result[y * length + x];
+			if (x == 0 || x == length - 1 || y == 0 || y == length - 1) {
+				result[x][y] = seed[x][y];
+				output[x][y] = result[x][y];
+				continue;
+			}
+
+			result[x][y] = noiseValue / scaleAccumulation;
+			output[x][y] = result[x][y];
 		}
 	}
 
 	return result;
-}
-
-unsigned int PerlinNoise::getWidth() {
-	return width;
-}
-
-unsigned int PerlinNoise::getHeight() {
-	return height;
 }

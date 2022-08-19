@@ -61,21 +61,26 @@ void AppWindow::draw() {
     GraphicsEngine::get()->getRenderSystem()->setRasterizerState(CULL_BACK);
 
     // draw terrain
-    updateTerrain();
-    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(vertexShader);
-    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(terrainPS);
 
-    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVSConstantBuffer(0, transformBuffer);
-    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVSConstantBuffer(1, lightingBuffer);
-    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPSConstantBuffer(0, transformBuffer);
-    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPSConstantBuffer(1, lightingBuffer);
+    auto chunks = terrainManager->getChunks();
+    for (int i = 0; i < chunks.size(); i++) {
+        updateTerrain();
+        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(vertexShader);
+        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(terrainPS);
 
-    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPSTextureArray(0, terrainTextures, terrainTextures->size());
+        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVSConstantBuffer(0, transformBuffer);
+        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVSConstantBuffer(1, lightingBuffer);
+        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPSConstantBuffer(0, transformBuffer);
+        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPSConstantBuffer(1, lightingBuffer);
 
-    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexBuffer(tm.getVertexBuffer());
-    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(tm.getIndexBuffer());
+        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPSTextureArray(0, terrainTextures, terrainTextures->size());
 
-    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(tm.getIndexBuffer()->getSizeIndexList(), 0, 0);
+        auto chunk = chunks[i];
+        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexBuffer(chunk.getVertexBuffer());
+        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(chunk.getIndexBuffer());
+
+        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(chunk.getIndexBuffer()->getSizeIndexList(), 0, 0);
+    }
 
     // Scene
     updateModel(Vec3f(0, 0, 0));
@@ -117,7 +122,7 @@ void AppWindow::updateSkybox() {
     TransformBuffer transBuffer;
 
     transBuffer.world.setIdentity();
-    transBuffer.world.setScale(Vec3f(512.0f, 512.0f, 512.0f));
+    transBuffer.world.setScale(Vec3f(2048.0f, 2048.0f, 2048.0f));
     transBuffer.world.setTranslation(camera.getWorld().getTranslation());
     transBuffer.view = camera.getView();
     transBuffer.proj = camera.getProj();
@@ -200,6 +205,8 @@ void AppWindow::drawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr>& ma
 void AppWindow::onCreate() {
 
     Window::onCreate();
+
+    camera.getWorld().setTranslation(Vec3f(512, 256, 512));
 
     playState = true;
     fullscreen = false;
@@ -301,13 +308,13 @@ void AppWindow::onCreate() {
     pointLightBuffer = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&plb, sizeof(PointLightBuffer));
 
     // Terrain
-    PerlinNoise pn(1024, 1024);
-    tm.generateFromPerlinNoise(pn, 128.0f, 1.0f);
+    terrainManager = new TerrainManager(8, 8, 256);
+    // tm.generateFromPerlinNoise(256.0f, 1.0f);
 
     for (int i = 0; i < 256; i++) {
         float x = (float) (rand() % 1024);
         float z = (float) (rand() % 1024);
-        float y = tm.getHeightAt(x, z);
+        float y = 0;//  tm.getHeightAt(x, z);
         positions.push_back(Vec3f(x, y, z));
     }
 
@@ -363,7 +370,7 @@ void AppWindow::onCreate() {
         EntityTree tree{};
         float tx = (float) (rand() % 1024);
         float tz = (float) (rand() % 1024);
-        float ty = tm.getHeightAt(tx, tz) - 1;
+        float ty = 0;//  tm.getHeightAt(tx, tz) - 1;
         float ry = (float) (rand() % 4);
         tree.transform.Position = Vec3f(tx, ty, tz);
         tree.transform.Camera = &camera;
@@ -439,7 +446,7 @@ void AppWindow::onKeyDown(int key) {
         up = -1.0f;
     }
 
-    camera.updateMovement(forward, right, up);
+    camera.updateMovement(forward, right, up, flyingMode);
 }
 
 void AppWindow::onKeyUp(int key) {
@@ -447,7 +454,11 @@ void AppWindow::onKeyUp(int key) {
     right = 0.0f;
     up = 0.0f;
 
-    camera.updateMovement(forward, right, up);
+    if (key == 'G') {
+        flyingMode = !flyingMode;
+    }
+
+    camera.updateMovement(forward, right, up, flyingMode);
 
     // TAB
     if (key == 9) {
