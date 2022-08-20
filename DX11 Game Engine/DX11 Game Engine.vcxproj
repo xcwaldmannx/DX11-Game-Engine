@@ -186,7 +186,6 @@
     <ClInclude Include="MeshManager.h" />
     <ClInclude Include="PointLightSystem.h" />
     <ClInclude Include="Segment.h" />
-    <ClInclude Include="TerrainChunk.h" />
     <ClInclude Include="TerrainManager.h" />
     <ClInclude Include="TextureArray.h" />
     <ClInclude Include="ThreadPool.h" />
@@ -232,7 +231,6 @@
     <ClCompile Include="PerlinNoise.cpp" />
     <ClCompile Include="PickableSystem.cpp" />
     <ClCompile Include="PointLightSystem.cpp" />
-    <ClCompile Include="TerrainChunk.cpp" />
     <ClCompile Include="TerrainManager.cpp" />
     <ClCompile Include="TextureArray.cpp" />
     <ClCompile Include="ThreadPool.cpp" />

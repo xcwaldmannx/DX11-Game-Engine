@@ -62,7 +62,7 @@ void AppWindow::draw() {
 
     // draw terrain
 
-    auto chunks = terrainManager->getChunks();
+    auto& chunks = terrainManager->getChunks();
     for (int i = 0; i < chunks.size(); i++) {
         updateTerrain();
         GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(vertexShader);
@@ -113,7 +113,7 @@ void AppWindow::draw() {
 }
 
 void AppWindow::update() {
-    camera.updateView(this, tm, deltaTime);
+    camera.updateView(this, deltaTime);
     ecs.update(deltaTime);
 }
 
@@ -122,7 +122,7 @@ void AppWindow::updateSkybox() {
     TransformBuffer transBuffer;
 
     transBuffer.world.setIdentity();
-    transBuffer.world.setScale(Vec3f(2048.0f, 2048.0f, 2048.0f));
+    transBuffer.world.setScale(Vec3f(4000.0f, 4000.0f, 4000.0f));
     transBuffer.world.setTranslation(camera.getWorld().getTranslation());
     transBuffer.view = camera.getView();
     transBuffer.proj = camera.getProj();
@@ -308,7 +308,7 @@ void AppWindow::onCreate() {
     pointLightBuffer = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&plb, sizeof(PointLightBuffer));
 
     // Terrain
-    terrainManager = new TerrainManager(8, 8, 256);
+    terrainManager = new TerrainManager(4, 4, 1024);
     // tm.generateFromPerlinNoise(256.0f, 1.0f);
 
     for (int i = 0; i < 256; i++) {

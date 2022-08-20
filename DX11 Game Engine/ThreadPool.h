@@ -5,6 +5,7 @@
 #include <vector>
 #include <thread>
 #include <mutex>
+#include <atomic>
 
 class ThreadPool {
 public:
@@ -15,14 +16,16 @@ public:
 
 	template<typename func>
 	void pushTask(func function) {
-		lock1.lock();
+		queueLock.lock();
 		tasks.push(std::function<void()>(function));
-		lock1.unlock();
+		queueLock.unlock();
+		taskCount.store(tasks.size());
 	}
 
 private:
-	std::mutex lock1, lock2;
-	bool isComplete = false;
+	std::mutex queueLock;
+	std::atomic<unsigned int> taskCount = 0;
+	std::atomic_bool isComplete = false;
 	std::vector<std::thread> threads;
 	std::queue<std::function<void()>> tasks;
 

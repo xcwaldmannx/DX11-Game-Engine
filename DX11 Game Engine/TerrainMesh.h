@@ -21,37 +21,10 @@ struct TerrainVertex {
 	Vec3f normal;
 };
 
-struct Terrain {
-	unsigned int width = 0;
-	unsigned int height = 0;
-	float** terrainHeights = nullptr;
-
-	VertexBufferPtr vertexBuffer = nullptr;
-	IndexBufferPtr indexBuffer = nullptr;
-
-	Terrain(unsigned int width, unsigned int height) : width(width), height(height) {
-		// memory allocation
-		terrainHeights = new float* [width];
-		for (unsigned int i = 0; i < width; i++) {
-			terrainHeights[i] = new float[height];
-		}
-	}
-};
-
 class TerrainMesh {
 public:
-	TerrainMesh();
+	TerrainMesh(unsigned int gridX, unsigned int gridY, unsigned int length);
 	~TerrainMesh();
-
-	const VertexBufferPtr& getVertexBuffer();
-	const IndexBufferPtr& getIndexBuffer();
-
-	static TerrainMesh generateMesh(unsigned int gridX, unsigned int gridY, unsigned int length, float scale, LOD_LEVEL lod);
-
-	void generateFromHeightmap(const std::string& filename, float scale, float resolution);
-	void generateFromPerlinNoise(float scale, float resolution);
-	float getHeightAt(float x, float z);
-	Vec2f getGridDimensions();
 
 public:
 	static LOD_LEVEL LOD_LEVEL_01 = 1;
@@ -63,10 +36,18 @@ public:
 	static LOD_LEVEL LOD_LEVEL_07 = 7;
 	static LOD_LEVEL LOD_LEVEL_08 = 8;
 
+public:
+
+	static TerrainMesh generateMesh(unsigned int gridX, unsigned int gridY, unsigned int length, float heightScale, LOD_LEVEL lod);
+
+	const VertexBufferPtr& getVertexBuffer();
+	const IndexBufferPtr& getIndexBuffer();
+
+	float getHeightAt(float x, float z);
+	Vec2f getGridDimensions();
+
 private:
 	void createMesh(float scale, float resolution);
-	Vec3f cross(Vec3f v1, Vec3f v2);
-	Vec3f normalize(Vec3f vec);
 
 	float barryCentric(const Vec3f& p1, const Vec3f& p2, const Vec3f& p3, float x, float z) {
 		float det = (p2.z - p3.z) * (p1.x - p3.x) + (p3.x - p2.x) * (p1.z - p3.z);
@@ -77,8 +58,10 @@ private:
 	}
 
 private:
-	unsigned int width = 0;
-	unsigned int height = 0;
+	unsigned int gridX = 0;
+	unsigned int gridY = 0;
+	unsigned int length = 0;
+
 	float** terrainHeights = nullptr;
 
 	VertexBufferPtr vertexBuffer = nullptr;

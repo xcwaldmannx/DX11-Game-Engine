@@ -10,7 +10,7 @@ public:
 	Camera();
 	~Camera();
 
-	void updateView(Window* window, TerrainMesh tm, long double deltaTime);
+	void updateView(Window* window, long double deltaTime);
 	void updateMovement(float forward, float right, float up, bool flyingMode);
 	void updateMouse(float rotX, float rotY);
 	const Vec3f& getWorldPosition();
@@ -47,7 +47,7 @@ private:
 	// jumping
 	bool m_isInAir = false;
 	float m_gravity = 0.0f;
-	float m_weight = 0.01f;
+	float m_weight = 0.1f;
 
 	// mouse picking
 	Vec3f mouseOrigin{};

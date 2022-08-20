@@ -80,7 +80,6 @@ private:
     // Terrain
     TerrainManager* terrainManager;
 
-    TerrainMesh tm{};
     TexturePtr grassTexture = nullptr, dirtTexture = nullptr, pathTexture = nullptr, pathmapTexture = nullptr, heightmapTexture = nullptr;
     TextureArrayPtr terrainTextures = nullptr;
 

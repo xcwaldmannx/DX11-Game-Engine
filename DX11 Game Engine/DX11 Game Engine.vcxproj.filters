@@ -109,9 +109,6 @@
     <Filter Include="GameEngine\TerrainSystem\Mesh">
       <UniqueIdentifier>{063dfae0-1e70-4202-ba7d-dea0d20d135d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameEngine\TerrainSystem\Chunk">
-      <UniqueIdentifier>{f00bf150-7bcb-4221-83ec-829a2faa97a4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameEngine\TerrainSystem\Generation">
       <UniqueIdentifier>{a3c90290-56d1-478b-8676-354f51b3304e}</UniqueIdentifier>
     </Filter>
@@ -212,9 +209,6 @@
     </ClCompile>
     <ClCompile Include="TerrainMesh.cpp">
       <Filter>GameEngine\TerrainSystem\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="TerrainChunk.cpp">
-      <Filter>GameEngine\TerrainSystem\Chunk</Filter>
     </ClCompile>
     <ClCompile Include="PerlinNoise.cpp">
       <Filter>GameEngine\TerrainSystem\Generation</Filter>
@@ -376,9 +370,6 @@
     </ClInclude>
     <ClInclude Include="TerrainMesh.h">
       <Filter>GameEngine\TerrainSystem\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="TerrainChunk.h">
-      <Filter>GameEngine\TerrainSystem\Chunk</Filter>
     </ClInclude>
     <ClInclude Include="PerlinNoise.h">
       <Filter>GameEngine\TerrainSystem\Generation</Filter>

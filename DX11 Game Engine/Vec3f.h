@@ -38,6 +38,13 @@ public:
 		return (float) sqrt(x * x + y * y + z * z);
 	}
 
+	static Vec3f cross(Vec3f v1, Vec3f v2) {
+		float x = (v1.y * v2.z) - (v2.y * v1.z);
+		float y = -((v1.x * v2.z) - (v2.x * v1.z));
+		float z = (v1.x * v2.y) - (v2.x * v1.y);
+		return Vec3f(x, y, z);
+	}
+
 	Vec3f operator+ (Vec3f vec) {
 		return Vec3f(x + vec.x, y + vec.y, z + vec.z);
 	}

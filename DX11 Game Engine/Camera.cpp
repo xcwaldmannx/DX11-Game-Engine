@@ -10,7 +10,7 @@ Camera::Camera() {
 Camera::~Camera() {
 }
 
-void Camera::updateView(Window* window, TerrainMesh tm, long double deltaTime) {
+void Camera::updateView(Window* window, long double deltaTime) {
 
     m_window = window;
     m_deltaTime = deltaTime;
@@ -26,7 +26,7 @@ void Camera::updateView(Window* window, TerrainMesh tm, long double deltaTime) {
     temp.setRotationY(m_rotY);
     camera *= temp;
 
-    float speed = 3.0f;
+    float speed = 5.0f;
 
     Vec3f camPosX;
     Vec3f camPosY;
@@ -46,7 +46,7 @@ void Camera::updateView(Window* window, TerrainMesh tm, long double deltaTime) {
         newCamPos = m_worldCamera.getTranslation() + camPosX + camPosZ;
 
         if (m_up == 1.0 && !m_isInAir) {
-            m_gravity = 0.5f;
+            m_gravity = 5.0f;
             newCamPos.y += m_gravity;
             m_isInAir = true;
         }
@@ -80,7 +80,7 @@ void Camera::updateView(Window* window, TerrainMesh tm, long double deltaTime) {
     int height = window->getWindowRect().bottom - window->getWindowRect().top;
     float aspect = (float)width / (float)height;
 
-    m_projCamera.setPerspective(1.57f, aspect, 0.1f, 2048.0f);
+    m_projCamera.setPerspective(1.57f, aspect, 0.1f, 4096.0f);
 
 
 }
