@@ -159,9 +159,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h" />
+    <ClInclude Include="InputManager.h" />
     <ClInclude Include="MousePicker.h" />
     <ClInclude Include="PerlinNoise.h" />
     <ClInclude Include="PickableSystem.h" />
+    <ClInclude Include="PlayableSystem.h" />
     <ClInclude Include="Point2f.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ComponentList.h" />
@@ -185,10 +187,16 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshManager.h" />
     <ClInclude Include="PointLightSystem.h" />
+    <ClInclude Include="QuadTree.h" />
     <ClInclude Include="Segment.h" />
+    <ClInclude Include="Terrain.h" />
     <ClInclude Include="TerrainManager.h" />
     <ClInclude Include="TextureArray.h" />
+    <ClInclude Include="ThreadCommon.h" />
+    <ClInclude Include="Threader.h" />
     <ClInclude Include="ThreadPool.h" />
+    <ClInclude Include="ThreadRegulator.h" />
+    <ClInclude Include="ThreadSafeQueue.h" />
     <ClInclude Include="TransformSystem.h" />
     <ClInclude Include="Prerequisites.h" />
     <ClInclude Include="DrawableSystem.h" />
@@ -198,7 +206,6 @@
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="SystemManager.h" />
-    <ClInclude Include="TerrainMesh.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Types.h" />
@@ -221,6 +228,7 @@
     <ClCompile Include="GraphicsEngine.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
+    <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="InputSystem.cpp" />
     <ClCompile Include="LightingSystem.cpp" />
     <ClCompile Include="main.cpp" />
@@ -230,10 +238,14 @@
     <ClCompile Include="MousePicker.cpp" />
     <ClCompile Include="PerlinNoise.cpp" />
     <ClCompile Include="PickableSystem.cpp" />
+    <ClCompile Include="PlayableSystem.cpp" />
     <ClCompile Include="PointLightSystem.cpp" />
+    <ClCompile Include="QuadTree.cpp" />
+    <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TerrainManager.cpp" />
     <ClCompile Include="TextureArray.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
+    <ClCompile Include="ThreadRegulator.cpp" />
     <ClCompile Include="TransformSystem.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="DrawableSystem.cpp" />
@@ -241,7 +253,6 @@
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="SwapChain.cpp" />
-    <ClCompile Include="TerrainMesh.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />

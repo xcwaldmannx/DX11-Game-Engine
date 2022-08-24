@@ -1,21 +1,10 @@
 #include "TransformSystem.h"
 
-#include "Coordinator.h"
-
-#include "ConstantBuffer.h"
-#include "ConstantBufferTypes.h"
-
 extern Coordinator coordinator;
 
 float rate = 0;
 
 void TransformSystem::init(long double deltaTime) {
-    for (auto const& entity : entities) {
-        auto& transform = coordinator.getComponent<TransformComponent>(entity);
-        auto& drawable = coordinator.getComponent<DrawableComponent>(entity);
-
-        calculateLocation(transform, drawable);
-    }
 }
 
 void TransformSystem::update(long double deltaTime) {
@@ -23,60 +12,60 @@ void TransformSystem::update(long double deltaTime) {
         auto& transform = coordinator.getComponent<TransformComponent>(entity);
         auto& drawable = coordinator.getComponent<DrawableComponent>(entity);
 
-        calculateLocation(transform, drawable);
+        TransformBuffer* transformBuffer = new TransformBuffer{};
+
+        // TRANSFORM BUFFER
+        transformBuffer->world.setIdentity();
+
+        // scale
+        calculateScale(transformBuffer, transform.scale);
+
+        // rotate from origin
+        calculateRotation(transformBuffer, transform.rotation);
+
+        if (transform.attachedToCamera) {
+            // rotate with camera
+            float rotX = transform.camera->getWorld().getRotation().x * transform.rotateWithCameraXYZ.x;
+            float rotY = transform.camera->getWorld().getRotation().y * transform.rotateWithCameraXYZ.y;
+            float rotZ = transform.camera->getWorld().getRotation().z * transform.rotateWithCameraXYZ.z;
+            calculateRotation(transformBuffer, Vec3f(rotX, rotY, rotZ));
+
+            // translate with camera
+            Vec3f x = transform.camera->getWorld().getXDirection() * transform.position.x * transform.translateWithCameraXYZ.x;
+            Vec3f y = transform.camera->getWorld().getYDirection() * transform.position.y * transform.translateWithCameraXYZ.y;
+            Vec3f z = transform.camera->getWorld().getZDirection() * transform.position.z * transform.translateWithCameraXYZ.z;
+            Vec3f position = transform.camera->getWorld().getTranslation() + x + y + z;
+            calculateTransformation(transformBuffer, position);
+        } else {
+            // translate from origin
+            calculateTransformation(transformBuffer, transform.position);
+        }
+
+        // view and projection
+        transformBuffer->view = transform.camera->getView();
+        transformBuffer->proj = transform.camera->getProj();
+
+        // update constant buffers
+        drawable.updateBuffer<TransformBuffer*>(TRANSFORM, transformBuffer);
+        transformBuffer = nullptr;
     }
 }
 
-void TransformSystem::calculateLocation(TransformComponent& transform, DrawableComponent& drawable) {
-    TransformBuffer* transformBuffer = new TransformBuffer{};
-
-    // TRANSFORM BUFFER
-    transformBuffer->world.setIdentity();
-
-    // scale
-    transformBuffer->world.setScale(transform.Scale);
-
-    // rotate
-    Mat4f temp;
-
-    // rotate self
-    temp.setIdentity();
-    temp.setRotationX(transform.Rotation.x);
-    transformBuffer->world *= temp;
-    temp.setIdentity();
-    temp.setRotationY(transform.Rotation.y);
-    transformBuffer->world *= temp;
-    temp.setIdentity();
-    temp.setRotationZ(transform.Rotation.z);
-    transformBuffer->world *= temp;
-
-    // rotate camera
-    temp.setIdentity();
-    temp.setRotationX(transform.Camera->getWorld().getRotation().x * transform.RotateWithCameraXYZ.x);
-    transformBuffer->world *= temp;
-    temp.setIdentity();
-    temp.setRotationY(transform.Camera->getWorld().getRotation().y * transform.RotateWithCameraXYZ.y);
-    transformBuffer->world *= temp;
-    temp.setIdentity();
-    temp.setRotationZ(transform.Camera->getWorld().getRotation().z * transform.RotateWithCameraXYZ.z);
-    transformBuffer->world *= temp;
-
-    // translate
-    if (transform.TranslateWithCameraXYZ.magnitude() > 0) {
-        Vec3f x = transform.Camera->getWorld().getXDirection() * transform.Position.x * transform.TranslateWithCameraXYZ.x;
-        Vec3f y = transform.Camera->getWorld().getYDirection() * transform.Position.y * transform.TranslateWithCameraXYZ.y;
-        Vec3f z = transform.Camera->getWorld().getZDirection() * transform.Position.z * transform.TranslateWithCameraXYZ.z;
-        Vec3f position = transform.Camera->getWorld().getTranslation() + x + y + z;
-        transformBuffer->world.setTranslation(position);
-    } else {
-        transformBuffer->world.setTranslation(transform.Position);
-    }
-
-    // view and projection
-    transformBuffer->view = transform.Camera->getView();
-    transformBuffer->proj = transform.Camera->getProj();
-
-    // update constant buffers
-    drawable.updateBuffer<TransformBuffer*>(TRANSFORM, transformBuffer);
-    transformBuffer = nullptr;
+void TransformSystem::calculateTransformation(TransformBuffer* buffer, const Vec3f& transform) {
+    buffer->world.setTranslation(transform);
+}
+void TransformSystem::calculateRotation(TransformBuffer* buffer, const Vec3f& rotate) {
+    Mat4f tempRot;
+    tempRot.setIdentity();
+    tempRot.setRotationX(rotate.x);
+    buffer->world *= tempRot;
+    tempRot.setIdentity();
+    tempRot.setRotationY(rotate.y);
+    buffer->world *= tempRot;
+    tempRot.setIdentity();
+    tempRot.setRotationZ(rotate.z);
+    buffer->world *= tempRot;
+}
+void TransformSystem::calculateScale(TransformBuffer* buffer, const Vec3f& scale) {
+    buffer->world.setScale(scale);
 }

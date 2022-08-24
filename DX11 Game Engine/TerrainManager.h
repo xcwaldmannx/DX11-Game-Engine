@@ -2,9 +2,9 @@
 
 #include <vector>
 #include <future>
+#include <mutex>
 
-#include "ThreadPool.h"
-#include "TerrainMesh.h"
+#include "Terrain.h"
 
 class TerrainManager {
 public:
@@ -12,15 +12,29 @@ public:
 	TerrainManager(unsigned int width, unsigned int height, unsigned int chunkLength);
 	~TerrainManager();
 
-	static void createChunk(std::vector<TerrainMesh>& chunks, unsigned int gridX, unsigned int gridY, unsigned int chunkLength);
-	const std::vector<TerrainMesh>& getChunks();
+	Terrain* createChunk(unsigned int x, unsigned int y, unsigned int chunkLength);
+	void updateChunks();
+	std::vector<Terrain*> getChunks();
+	const unsigned int getWidth();
+	const unsigned int getHeight();
+
+	float getHeightAt(float x, float z);
+
+	bool isReady(std::future<Terrain*> const& f) {
+		return f.wait_for(std::chrono::seconds(0)) == std::future_status::ready;
+	}
 
 private:
 	unsigned int width = 0;
 	unsigned int height = 0;
 	unsigned int chunkCount = 0;
 	unsigned int chunkLength = 0;
-	std::vector<TerrainMesh> chunks;
-	ThreadPool pool;
+
+	std::mutex chunksLock;
+	std::mutex futuresLock;
+	std::mutex heightLock;
+
+	std::vector<Terrain*> chunks;
+	std::vector<std::future<Terrain*>> futures;
 };
 

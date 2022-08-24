@@ -9,8 +9,10 @@
 
 #include "ComponentTypes.h"
 
-class LightingSystem : public System {
+class PlayableSystem : public System {
 public:
-    void update();
+	PlayableSystem();
+	~PlayableSystem();
 
+	void update(long double deltaTime);
 };

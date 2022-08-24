@@ -18,17 +18,17 @@ struct EntityTerrain : public EntityInfo {
 
 	EntityTerrain() {
 		// transform
-		transform.Position = Vec3f(0, 0, 0);
-		transform.Rotation = Vec3f(0, 0, 0);
-		transform.Scale = Vec3f(1, 1, 1);
+		transform.position = Vec3f(0, 0, 0);
+		transform.rotation = Vec3f(0, 0, 0);
+		transform.scale = Vec3f(1, 1, 1);
 
 		// drawable
 
 		// lighting
-		lighting.Ambient = 0.3f;
-		lighting.Diffuse = 1.0f;
-		lighting.Specular = 0.0f;
-		lighting.Shininess = 0.0f;
+		lighting.ambient = 0.3f;
+		lighting.diffuse = 1.0f;
+		lighting.specular = 0.0f;
+		lighting.shininess = 0.0f;
 	}
 };
 
@@ -39,17 +39,17 @@ struct EntityTree : public EntityInfo {
 
 	EntityTree() {
 		// transform
-		transform.Position = Vec3f(0, 0, 0);
-		transform.Rotation = Vec3f(0, random(0, PI), 0);
-		transform.Scale = Vec3f(0.5f, 0.5f, 0.5f);
+		transform.position = Vec3f(0, 0, 0);
+		transform.rotation = Vec3f(0, random(0, PI), 0);
+		transform.scale = Vec3f(0.5f, 0.5f, 0.5f);
 
 		// drawable
 
 		// lighting
-		lighting.Ambient = 0.3f;
-		lighting.Diffuse = 1.0f;
-		lighting.Specular = 0.0f;
-		lighting.Shininess = 0.0f;
+		lighting.ambient = 0.3f;
+		lighting.diffuse = 1.0f;
+		lighting.specular = 0.0f;
+		lighting.shininess = 0.0f;
 	}
 };
 
@@ -58,8 +58,8 @@ struct EntityPointLight : public EntityInfo {
 	PointLightComponent pointLight{};
 
 	EntityPointLight() {
-		pointLight.LightPosition = Vec4f(0, 1, 0, 0);
-		pointLight.Radius = 1.0f;
+		pointLight.lightPosition = Vec4f(0, 1, 0, 0);
+		pointLight.radius = 1.0f;
 	}
 };
 

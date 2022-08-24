@@ -1,9 +1,13 @@
 #pragma once
 
-#include <vector>
+#include "System.h"
 
 #include "Coordinator.h"
-#include "System.h"
+
+#include "ConstantBuffer.h"
+#include "ConstantBufferTypes.h"
+
+#include "ComponentTypes.h"
 
 class PointLightSystem : public System {
 public:

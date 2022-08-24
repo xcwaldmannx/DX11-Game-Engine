@@ -127,7 +127,6 @@ RECT Window::getWindowRect() {
 RECT Window::getWindowPosition() {
     RECT r;
     GetWindowRect(hwnd, &r);
-    MapWindowPoints(HWND_DESKTOP, GetParent(hwnd), (LPPOINT) &r, 2);
     return r;
 }
 

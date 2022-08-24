@@ -1,12 +1,5 @@
 #include "PointLightSystem.h"
 
-#include "Coordinator.h"
-#include "ComponentTypes.h"
-
-#include "ConstantBuffer.h"
-#include "ConstantBufferTypes.h"
-
-
 extern Coordinator coordinator;
 
 void PointLightSystem::update() {
@@ -17,9 +10,9 @@ void PointLightSystem::update() {
 
 		PointLightBuffer* pointLightBuffer = new PointLightBuffer{};
 
-		pointLightBuffer->lightPosition = pointLight.LightPosition;
-		pointLightBuffer->cameraPosition = transform.Camera->getWorld().getTranslation();
-		pointLightBuffer->radius = pointLight.Radius;
+		pointLightBuffer->lightPosition = pointLight.lightPosition;
+		pointLightBuffer->cameraPosition = transform.camera->getWorld().getTranslation();
+		pointLightBuffer->radius = pointLight.radius;
 
 		drawable.updateBuffer<PointLightBuffer*>(POINT_LIGHT, pointLightBuffer);
 		pointLightBuffer = nullptr;

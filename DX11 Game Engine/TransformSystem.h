@@ -1,9 +1,12 @@
 #pragma once
 
-#include <vector>
+#include "System.h"
 
 #include "Coordinator.h"
-#include "System.h"
+
+#include "ConstantBuffer.h"
+#include "ConstantBufferTypes.h"
+
 #include "ComponentTypes.h"
 
 class TransformSystem : public System {
@@ -12,5 +15,7 @@ public:
     void update(long double deltaTime);
 
 private:
-    void calculateLocation(TransformComponent& transform, DrawableComponent& drawable);
+    void calculateTransformation(TransformBuffer* buffer, const Vec3f& transform);
+    void calculateRotation(TransformBuffer* buffer, const Vec3f& rotate);
+    void calculateScale(TransformBuffer* buffer, const Vec3f& scale);
 };

@@ -1,6 +1,9 @@
 #pragma once
 
 #include <string>
+#include <vector>
+
+#include "VertexMesh.h"
 
 class Resource {
 public:
@@ -8,5 +11,7 @@ public:
 	virtual ~Resource();
 protected:
 	std::wstring fullPath{};
+	std::vector<VertexMesh> vertices;
+	std::vector<unsigned int> indices;
 };
 

@@ -3,11 +3,11 @@
 #include "Prerequisites.h"
 #include "Mat4f.h"
 #include "Window.h"
-#include "TerrainMesh.h"
+#include "TerrainManager.h"
 
 class Camera {
 public:
-	Camera();
+	Camera(TerrainManager* terrainManager);
 	~Camera();
 
 	void updateView(Window* window, long double deltaTime);
@@ -22,6 +22,9 @@ public:
 
 private:
 	Window* m_window = nullptr;
+
+	// terrain
+	TerrainManager* terrainManager;
 
 	// view
 	Mat4f m_worldCamera{};

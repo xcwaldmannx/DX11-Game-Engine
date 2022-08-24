@@ -6,7 +6,6 @@
 #include <Windows.h>
 
 #include "GraphicsEngine.h"
-#include "VertexMesh.h"
 
 Mesh::Mesh(const wchar_t* fullPath) : Resource(fullPath) {
 	tinyobj::attrib_t attribs;
@@ -103,10 +102,8 @@ Mesh::Mesh(const wchar_t* fullPath) : Resource(fullPath) {
 	indexBuffer = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(&indices[0], (UINT) indices.size());
 
 	// bounding box
-
 	generateAABB();
 }
-
 
 Mesh::~Mesh() {
 }

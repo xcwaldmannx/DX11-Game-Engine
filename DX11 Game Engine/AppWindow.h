@@ -16,10 +16,8 @@
 #include "VertexShader.h"
 #include "PixelShader.h"
 
-#include "InputListener.h"
 #include "Mat4f.h"
 
-#include "TerrainMesh.h"
 #include "TerrainManager.h"
 
 #include "Camera.h"
@@ -28,7 +26,9 @@
 
 #include "TextureArray.h"
 
-class AppWindow : public Window, public InputListener {
+#include "InputManager.h"
+
+class AppWindow : public Window {
 public:
     AppWindow();
     ~AppWindow();
@@ -41,6 +41,9 @@ public:
 
     void drawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr>& materials, ConstantBufferPtr cBuffer[]);
 
+    void placeEntity();
+
+    // window overrides
     virtual void onCreate() override;
     virtual void onUpdate() override;
     virtual void onDestroy() override;
@@ -48,14 +51,9 @@ public:
     virtual void onKillFocus() override;
     virtual void onSize() override;
 
-    virtual void onKeyDown(int key) override;
-    virtual void onKeyUp(int key) override;
-
-    virtual void onMouseMove(const Point2f& mousePos) override;
-    virtual void onLeftMouseDown(const Point2f& mousePos) override;
-    virtual void onLeftMouseUp(const Point2f& mousePos) override;
-    virtual void onRightMouseDown(const Point2f& mousePos) override;
-    virtual void onRightMouseUp(const Point2f& mousePos) override;
+    // input
+    Point2f getWindowCenter();
+    void updateInputEvents();
 
 private:
     SwapChainPtr swapchain = nullptr;
@@ -78,7 +76,7 @@ private:
     PixelShaderPtr boundingBoxShader = nullptr;
 
     // Terrain
-    TerrainManager* terrainManager;
+    TerrainManager* terrainManager = nullptr;
 
     TexturePtr grassTexture = nullptr, dirtTexture = nullptr, pathTexture = nullptr, pathmapTexture = nullptr, heightmapTexture = nullptr;
     TextureArrayPtr terrainTextures = nullptr;
@@ -96,6 +94,10 @@ private:
     TexturePtr branchTexture = nullptr;
     MaterialPtr branchMaterial = nullptr;
 
+    // dead tree
+    MeshPtr deadTreeMesh = nullptr;
+    TexturePtr deadTreeTex = nullptr;
+
     //scene
     MeshPtr sceneMesh = nullptr;
 
@@ -109,6 +111,11 @@ private:
     long double deltaTime = 0.0;
     std::chrono::steady_clock::time_point lastUpdate{};
 
+    // mouse clicking
+    int click = -1;
+
+    bool canPlaceEntity = true;
+
     // camera rotation
     float rotX = 0.0f;
     float rotY = 0.0f;
@@ -120,7 +127,7 @@ private:
     float up = 0.0f;
 
     // camera matrices
-    Camera camera{};
+    Camera camera{nullptr};
 
     // play state or non-play state indication
     bool playState = false;
@@ -129,5 +136,8 @@ private:
 
     // Entities
     ECS ecs{};
+
+    // Input    
+    InputManager* inputManager = new InputManager();        
 
 };

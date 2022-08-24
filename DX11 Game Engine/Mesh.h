@@ -1,10 +1,13 @@
 #pragma once
 
+#include <string>
 #include <vector>
 
 #include "Resource.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+
+#include "VertexMesh.h"
 
 #include "Vec3f.h"
 

@@ -25,7 +25,7 @@ void ThreadPool::executeTask() {
 			task = tasks.front();
 			tasks.pop();
 			queueLock.unlock();
-			taskCount.store(tasks.size());
+			taskCount--;
 			task();
 		} else {
 			std::this_thread::yield();

@@ -38,11 +38,29 @@ public:
 		return (float) sqrt(x * x + y * y + z * z);
 	}
 
+	static float dot(Vec3f v1, Vec3f v2) {
+		return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+	}
+
 	static Vec3f cross(Vec3f v1, Vec3f v2) {
 		float x = (v1.y * v2.z) - (v2.y * v1.z);
 		float y = -((v1.x * v2.z) - (v2.x * v1.z));
 		float z = (v1.x * v2.y) - (v2.x * v1.y);
 		return Vec3f(x, y, z);
+	}
+
+	static float dist(Vec3f v1, Vec3f v2) {
+		float d1 = (v2.x - v1.x) * (v2.x - v1.x);
+		float d2 = (v2.y - v1.y) * (v2.y - v1.y);
+		float d3 = (v2.z - v1.z) * (v2.z - v1.z);
+		return (float) sqrt(d1 + d2 + d3);
+	}
+
+	static float angleBetween(Vec3f v1, Vec3f v2) {
+		float dotProduct = dot(v1, v2);
+		float mag1 = v1.magnitude();
+		float mag2 = v2.magnitude();
+		return acos(dotProduct / (mag1 * mag2));
 	}
 
 	Vec3f operator+ (Vec3f vec) {

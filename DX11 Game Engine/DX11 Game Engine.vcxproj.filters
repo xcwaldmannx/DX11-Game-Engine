@@ -94,9 +94,6 @@
     <Filter Include="App\Shaders\SkyboxShader">
       <UniqueIdentifier>{3f5c0a98-2358-4fec-b992-d9526920a302}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameEngine\EntitySystem\ECS\Entities">
-      <UniqueIdentifier>{0edd5f0c-6d5d-49b9-95aa-f988083fa814}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameEngine\Material">
       <UniqueIdentifier>{97d01d26-8e37-47f9-8961-dabf4ddde07b}</UniqueIdentifier>
     </Filter>
@@ -106,14 +103,41 @@
     <Filter Include="App\Shaders\BoundingBoxShader">
       <UniqueIdentifier>{101f98f0-5223-449d-975d-eec5c1a56d81}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameEngine\TerrainSystem\Mesh">
-      <UniqueIdentifier>{063dfae0-1e70-4202-ba7d-dea0d20d135d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameEngine\TerrainSystem\Generation">
-      <UniqueIdentifier>{a3c90290-56d1-478b-8676-354f51b3304e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameEngine\ThreadingSystem">
       <UniqueIdentifier>{98dbc175-d29a-4441-bd28-94636cd25a48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\TerrainSystem\PerlinNoise">
+      <UniqueIdentifier>{a3c90290-56d1-478b-8676-354f51b3304e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\ThreadingSystem\notmine">
+      <UniqueIdentifier>{9d319c36-4db1-4368-a616-829127797958}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataStructures">
+      <UniqueIdentifier>{fa0ff32d-c9ae-4931-99aa-b6ef2d247aba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataStructures\QuadTree">
+      <UniqueIdentifier>{d87c7753-5857-4d9a-889f-4895eae15833}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\EntitySystem\ECS\System\Transform">
+      <UniqueIdentifier>{1b5f8d67-0dd9-4b6d-b057-3839ec03c6b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\EntitySystem\ECS\System\Drawable">
+      <UniqueIdentifier>{0c1e6be0-6418-44c1-ab79-8c5645e763d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\EntitySystem\ECS\System\Lighting">
+      <UniqueIdentifier>{f7186b5f-5c4e-4c7b-bb71-0560fb30a411}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\EntitySystem\ECS\System\Pickable">
+      <UniqueIdentifier>{836e38ab-fb45-44fe-a614-1e95156bde19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\EntitySystem\ECS\System\Playable">
+      <UniqueIdentifier>{9ec07612-597c-4b5c-a61d-88854dd030f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\EntitySystem\Entities">
+      <UniqueIdentifier>{0edd5f0c-6d5d-49b9-95aa-f988083fa814}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\InputSystem\InputManager">
+      <UniqueIdentifier>{a66660d7-7180-424c-8184-8dcc5ee9faec}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -180,20 +204,8 @@
     <ClCompile Include="Camera.cpp">
       <Filter>GameEngine\CameraSystem</Filter>
     </ClCompile>
-    <ClCompile Include="DrawableSystem.cpp">
-      <Filter>GameEngine\EntitySystem\ECS\System</Filter>
-    </ClCompile>
     <ClCompile Include="ECS.cpp">
       <Filter>GameEngine\EntitySystem\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="TransformSystem.cpp">
-      <Filter>GameEngine\EntitySystem\ECS\System</Filter>
-    </ClCompile>
-    <ClCompile Include="LightingSystem.cpp">
-      <Filter>GameEngine\EntitySystem\ECS\System</Filter>
-    </ClCompile>
-    <ClCompile Include="PointLightSystem.cpp">
-      <Filter>GameEngine\EntitySystem\ECS\System</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp">
       <Filter>GameEngine\Material</Filter>
@@ -201,23 +213,47 @@
     <ClCompile Include="TextureArray.cpp">
       <Filter>GameEngine\GraphicsEngine\ResourceManager\TextureManager</Filter>
     </ClCompile>
-    <ClCompile Include="PickableSystem.cpp">
-      <Filter>GameEngine\EntitySystem\ECS\System</Filter>
-    </ClCompile>
     <ClCompile Include="MousePicker.cpp">
       <Filter>GameEngine\MousePicker</Filter>
     </ClCompile>
-    <ClCompile Include="TerrainMesh.cpp">
-      <Filter>GameEngine\TerrainSystem\Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="PerlinNoise.cpp">
-      <Filter>GameEngine\TerrainSystem\Generation</Filter>
+      <Filter>GameEngine\TerrainSystem\PerlinNoise</Filter>
     </ClCompile>
     <ClCompile Include="TerrainManager.cpp">
       <Filter>GameEngine\TerrainSystem</Filter>
     </ClCompile>
     <ClCompile Include="ThreadPool.cpp">
       <Filter>GameEngine\ThreadingSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>GameEngine\TerrainSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadRegulator.cpp">
+      <Filter>GameEngine\ThreadingSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadTree.cpp">
+      <Filter>DataStructures\QuadTree</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformSystem.cpp">
+      <Filter>GameEngine\EntitySystem\ECS\System\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawableSystem.cpp">
+      <Filter>GameEngine\EntitySystem\ECS\System\Drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="LightingSystem.cpp">
+      <Filter>GameEngine\EntitySystem\ECS\System\Lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLightSystem.cpp">
+      <Filter>GameEngine\EntitySystem\ECS\System\Lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="PickableSystem.cpp">
+      <Filter>GameEngine\EntitySystem\ECS\System\Pickable</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayableSystem.cpp">
+      <Filter>GameEngine\EntitySystem\ECS\System\Playable</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>GameEngine\InputSystem\InputManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -326,26 +362,14 @@
     <ClInclude Include="ComponentManager.h">
       <Filter>GameEngine\EntitySystem\ECS\Core</Filter>
     </ClInclude>
-    <ClInclude Include="TransformSystem.h">
-      <Filter>GameEngine\EntitySystem\ECS\System</Filter>
-    </ClInclude>
-    <ClInclude Include="DrawableSystem.h">
-      <Filter>GameEngine\EntitySystem\ECS\System</Filter>
-    </ClInclude>
     <ClInclude Include="ECS.h">
       <Filter>GameEngine\EntitySystem\ECS</Filter>
     </ClInclude>
     <ClInclude Include="ComponentTypes.h">
       <Filter>GameEngine\EntitySystem\ECS\Component</Filter>
     </ClInclude>
-    <ClInclude Include="LightingSystem.h">
-      <Filter>GameEngine\EntitySystem\ECS\System</Filter>
-    </ClInclude>
     <ClInclude Include="EntityTypes.h">
-      <Filter>GameEngine\EntitySystem\ECS\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="PointLightSystem.h">
-      <Filter>GameEngine\EntitySystem\ECS\System</Filter>
+      <Filter>GameEngine\EntitySystem\Entities</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
       <Filter>GameEngine\Material</Filter>
@@ -362,23 +386,56 @@
     <ClInclude Include="Segment.h">
       <Filter>GameEngine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="PickableSystem.h">
-      <Filter>GameEngine\EntitySystem\ECS\System</Filter>
-    </ClInclude>
     <ClInclude Include="MousePicker.h">
       <Filter>GameEngine\MousePicker</Filter>
     </ClInclude>
-    <ClInclude Include="TerrainMesh.h">
-      <Filter>GameEngine\TerrainSystem\Mesh</Filter>
-    </ClInclude>
     <ClInclude Include="PerlinNoise.h">
-      <Filter>GameEngine\TerrainSystem\Generation</Filter>
+      <Filter>GameEngine\TerrainSystem\PerlinNoise</Filter>
     </ClInclude>
     <ClInclude Include="TerrainManager.h">
       <Filter>GameEngine\TerrainSystem</Filter>
     </ClInclude>
     <ClInclude Include="ThreadPool.h">
       <Filter>GameEngine\ThreadingSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>GameEngine\TerrainSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadRegulator.h">
+      <Filter>GameEngine\ThreadingSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadSafeQueue.h">
+      <Filter>GameEngine\ThreadingSystem\notmine</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadCommon.h">
+      <Filter>GameEngine\ThreadingSystem\notmine</Filter>
+    </ClInclude>
+    <ClInclude Include="Threader.h">
+      <Filter>GameEngine\ThreadingSystem\notmine</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadTree.h">
+      <Filter>DataStructures\QuadTree</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformSystem.h">
+      <Filter>GameEngine\EntitySystem\ECS\System\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawableSystem.h">
+      <Filter>GameEngine\EntitySystem\ECS\System\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="LightingSystem.h">
+      <Filter>GameEngine\EntitySystem\ECS\System\Lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLightSystem.h">
+      <Filter>GameEngine\EntitySystem\ECS\System\Lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="PickableSystem.h">
+      <Filter>GameEngine\EntitySystem\ECS\System\Pickable</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayableSystem.h">
+      <Filter>GameEngine\EntitySystem\ECS\System\Playable</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>GameEngine\InputSystem\InputManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

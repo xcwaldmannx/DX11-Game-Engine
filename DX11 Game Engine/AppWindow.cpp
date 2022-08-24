@@ -61,34 +61,36 @@ void AppWindow::draw() {
     GraphicsEngine::get()->getRenderSystem()->setRasterizerState(CULL_BACK);
 
     // draw terrain
+    updateTerrain();
+    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(vertexShader);
+    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(terrainPS);
 
-    auto& chunks = terrainManager->getChunks();
+    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVSConstantBuffer(0, transformBuffer);
+    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVSConstantBuffer(1, lightingBuffer);
+    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPSConstantBuffer(0, transformBuffer);
+    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPSConstantBuffer(1, lightingBuffer);
+
+    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPSTextureArray(0, terrainTextures, terrainTextures->size());
+
+    auto chunks = terrainManager->getChunks();
+
     for (int i = 0; i < chunks.size(); i++) {
-        updateTerrain();
-        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(vertexShader);
-        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(terrainPS);
-
-        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVSConstantBuffer(0, transformBuffer);
-        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVSConstantBuffer(1, lightingBuffer);
-        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPSConstantBuffer(0, transformBuffer);
-        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPSConstantBuffer(1, lightingBuffer);
-
-        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPSTextureArray(0, terrainTextures, terrainTextures->size());
-
         auto chunk = chunks[i];
-        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexBuffer(chunk.getVertexBuffer());
-        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(chunk.getIndexBuffer());
+        if (chunk->getVertexBuffer() && chunk->getIndexBuffer()) {
+            GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexBuffer(chunk->getVertexBuffer());
+            GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(chunk->getIndexBuffer());
 
-        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(chunk.getIndexBuffer()->getSizeIndexList(), 0, 0);
+            GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(chunk->getIndexBuffer()->getSizeIndexList(), 0, 0);
+        }
     }
 
     // Scene
-    updateModel(Vec3f(0, 0, 0));
+    updateModel(camera.getMousePosition());
     ConstantBufferPtr arr1[] = { transformBuffer , lightingBuffer };
     materialsList.clear();
+    materialsList.push_back(branchMaterial);
     materialsList.push_back(barkMaterial);
-    materialsList.push_back(boxMaterial);
-    drawMesh(sceneMesh, materialsList, arr1);
+    drawMesh(pinetreeMesh, materialsList, arr1);
 
     // pine tree
     for (int i = 0; i < 256; i++) {
@@ -113,6 +115,12 @@ void AppWindow::draw() {
 }
 
 void AppWindow::update() {
+    updateInputEvents();
+
+    if (canPlaceEntity) {
+        placeEntity();
+    }
+
     camera.updateView(this, deltaTime);
     ecs.update(deltaTime);
 }
@@ -202,15 +210,43 @@ void AppWindow::drawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr>& ma
     }
 }
 
+void AppWindow::placeEntity() {
+    if (click == 1 && canPlaceEntity) {
+        canPlaceEntity = false;
+
+        Mat4f lightRotMatrix;
+        lightRotMatrix.setIdentity();
+        lightRotMatrix.setRotationX(3.5f);
+
+        EntityTree tree{};
+        tree.transform.position = camera.getMousePosition();
+        tree.transform.camera = &camera;
+        tree.drawable.vertexShader = vertexShader;
+        tree.drawable.pixelShader = basicPS;
+        tree.drawable.boundingboxShader = boundingBoxShader;
+        tree.drawable.addBuffer(TRANSFORM, transformBuffer);
+        tree.drawable.addBuffer(LIGHTING, lightingBuffer);
+        tree.drawable.mesh = deadTreeMesh;
+        tree.drawable.vertexShaderTextures = std::vector<TexturePtr>{ deadTreeTex };
+        tree.drawable.pixelShaderTextures = std::vector<TexturePtr>{ deadTreeTex };
+        tree.lighting.lightDirection = lightRotMatrix.getZDirection();
+        tree.lighting.cameraPosition = camera.getWorld().getTranslation();
+
+        EntityID entity = ecs.createEntity();
+        ecs.addComponentToEntity<TransformComponent>(entity, tree.transform);
+        ecs.addComponentToEntity<DrawableComponent>(entity, tree.drawable);
+        ecs.addComponentToEntity<LightingComponent>(entity, tree.lighting);
+        ecs.addComponentToEntity<PickableComponent>(entity, tree.pickable);
+    }
+}
+
 void AppWindow::onCreate() {
 
     Window::onCreate();
 
-    camera.getWorld().setTranslation(Vec3f(512, 256, 512));
-
     playState = true;
     fullscreen = false;
-    InputSystem::get()->addListener(this);
+    InputSystem::get()->addListener(inputManager);
     InputSystem::get()->showCursor(!playState);
 
     sky = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\sky.jpg");
@@ -308,21 +344,25 @@ void AppWindow::onCreate() {
     pointLightBuffer = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&plb, sizeof(PointLightBuffer));
 
     // Terrain
-    terrainManager = new TerrainManager(4, 4, 1024);
-    // tm.generateFromPerlinNoise(256.0f, 1.0f);
+    terrainManager = new TerrainManager(2, 2, 1024);
+    
+    // Camera
+    camera = Camera{terrainManager};
+    camera.getWorld().setTranslation(Vec3f(16, 256, 16));
 
     for (int i = 0; i < 256; i++) {
         float x = (float) (rand() % 1024);
         float z = (float) (rand() % 1024);
-        float y = 0;//  tm.getHeightAt(x, z);
+        float y = terrainManager->getHeightAt(x, z);
         positions.push_back(Vec3f(x, y, z));
     }
 
     // Entities
     ecs.init();
 
-    TexturePtr texture = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\bark.png");
-    MeshPtr mesh = GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\tree.obj");
+    deadTreeTex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\bark.png");
+    deadTreeMesh= GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\tree.obj");
+
     TexturePtr lamp = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\lamp.png");
     MeshPtr lampMesh = GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\lamp.obj");
 
@@ -331,37 +371,38 @@ void AppWindow::onCreate() {
     lightRotMatrix.setRotationX(3.5f);
 
     EntityPointLight pointLight{};
-    pointLight.transform.Position = Vec3f(0, 0, 0);
-    pointLight.transform.Scale = Vec3f(1, 1, 1);
-    pointLight.transform.Camera = &camera;
-    pointLight.drawable.VertexShader = vertexShader;
-    pointLight.drawable.PixelShader = pointLightPS;
+    pointLight.transform.position = Vec3f(0, 0, 0);
+    pointLight.transform.scale = Vec3f(1, 1, 1);
+    pointLight.transform.camera = &camera;
+    pointLight.drawable.vertexShader = vertexShader;
+    pointLight.drawable.pixelShader = pointLightPS;
     pointLight.drawable.addBuffer(TRANSFORM, transformBuffer);
     pointLight.drawable.addBuffer(POINT_LIGHT, pointLightBuffer);
-    pointLight.drawable.Mesh = mesh;
-    pointLight.drawable.VertexShaderTextures = std::vector<TexturePtr>{ texture };
-    pointLight.drawable.PixelShaderTextures = std::vector<TexturePtr>{ texture };
-    pointLight.pointLight.LightPosition = Vec4f(0, 1, -5, 0);
-    pointLight.pointLight.CameraPosition = camera.getWorld().getTranslation();
-    pointLight.pointLight.Radius = 25.0f;
+    pointLight.drawable.mesh = deadTreeMesh;
+    pointLight.drawable.vertexShaderTextures = std::vector<TexturePtr>{ deadTreeTex };
+    pointLight.drawable.pixelShaderTextures = std::vector<TexturePtr>{ deadTreeTex };
+    pointLight.pointLight.lightPosition = Vec4f(0, 1, -5, 0);
+    pointLight.pointLight.cameraPosition = camera.getWorld().getTranslation();
+    pointLight.pointLight.radius = 25.0f;
     EntityID entity = ecs.createEntity();
     ecs.addComponentToEntity<TransformComponent>(entity, pointLight.transform);
     ecs.addComponentToEntity<DrawableComponent>(entity, pointLight.drawable);
     ecs.addComponentToEntity<PointLightComponent>(entity, pointLight.pointLight);
 
     EntityPlayerHand playerHand{};
-    playerHand.transform.Position = Vec3f(-0.5f, -0.5f, 0.5f);
-    playerHand.transform.Rotation = Vec3f(0, PI / 2, 0);
-    playerHand.transform.Scale = Vec3f(0.25f, 0.25f, 0.25f);
-    playerHand.transform.Camera = &camera;
-    playerHand.transform.TranslateWithCameraXYZ = Vec3f(1, 1, 1);
-    playerHand.transform.RotateWithCameraXYZ = Vec3f(0, 1, 0);
-    playerHand.drawable.VertexShader = vertexShader;
-    playerHand.drawable.PixelShader = basicPS;
+    playerHand.transform.position = Vec3f(-0.5f, -0.5f, 0.5f);
+    playerHand.transform.rotation = Vec3f(0, PI / 2, 0);
+    playerHand.transform.scale = Vec3f(0.25f, 0.25f, 0.25f);
+    playerHand.transform.camera = &camera;
+    playerHand.transform.attachedToCamera = true;
+    playerHand.transform.translateWithCameraXYZ = Vec3f(1, 1, 1);
+    playerHand.transform.rotateWithCameraXYZ = Vec3f(0, 1, 0);
+    playerHand.drawable.vertexShader = vertexShader;
+    playerHand.drawable.pixelShader = basicPS;
     playerHand.drawable.addBuffer(TRANSFORM, transformBuffer);
-    playerHand.drawable.Mesh = lampMesh;
-    playerHand.drawable.VertexShaderTextures = std::vector<TexturePtr>{ lamp };
-    playerHand.drawable.PixelShaderTextures = std::vector<TexturePtr>{ lamp };
+    playerHand.drawable.mesh = lampMesh;
+    playerHand.drawable.vertexShaderTextures = std::vector<TexturePtr>{ lamp };
+    playerHand.drawable.pixelShaderTextures = std::vector<TexturePtr>{ lamp };
     entity = ecs.createEntity();
     ecs.addComponentToEntity<TransformComponent>(entity, playerHand.transform);
     ecs.addComponentToEntity<DrawableComponent>(entity, playerHand.drawable);
@@ -370,20 +411,20 @@ void AppWindow::onCreate() {
         EntityTree tree{};
         float tx = (float) (rand() % 1024);
         float tz = (float) (rand() % 1024);
-        float ty = 0;//  tm.getHeightAt(tx, tz) - 1;
+        float ty = terrainManager->getHeightAt(tx, tz) - 1;
         float ry = (float) (rand() % 4);
-        tree.transform.Position = Vec3f(tx, ty, tz);
-        tree.transform.Camera = &camera;
-        tree.drawable.VertexShader = vertexShader;
-        tree.drawable.PixelShader = basicPS;
-        tree.drawable.BoundingBoxShader = boundingBoxShader;
+        tree.transform.position = Vec3f(tx, ty, tz);
+        tree.transform.camera = &camera;
+        tree.drawable.vertexShader = vertexShader;
+        tree.drawable.pixelShader = basicPS;
+        tree.drawable.boundingboxShader = boundingBoxShader;
         tree.drawable.addBuffer(TRANSFORM, transformBuffer);
         tree.drawable.addBuffer(LIGHTING, lightingBuffer);
-        tree.drawable.Mesh = mesh;
-        tree.drawable.VertexShaderTextures = std::vector<TexturePtr>{ texture };
-        tree.drawable.PixelShaderTextures = std::vector<TexturePtr>{ texture };
-        tree.lighting.LightDirection = lightRotMatrix.getZDirection();
-        tree.lighting.CameraPosition = camera.getWorld().getTranslation();
+        tree.drawable.mesh = deadTreeMesh;
+        tree.drawable.vertexShaderTextures = std::vector<TexturePtr>{ deadTreeTex };
+        tree.drawable.pixelShaderTextures = std::vector<TexturePtr>{ deadTreeTex };
+        tree.lighting.lightDirection = lightRotMatrix.getZDirection();
+        tree.lighting.cameraPosition = camera.getWorld().getTranslation();
 
         EntityID entity = ecs.createEntity();
         ecs.addComponentToEntity<TransformComponent>(entity, tree.transform);
@@ -406,11 +447,11 @@ void AppWindow::onDestroy() {
 }
 
 void AppWindow::onFocus() {
-    InputSystem::get()->addListener(this);
+    InputSystem::get()->addListener(inputManager);
 }
 
 void AppWindow::onKillFocus() {
-    InputSystem::get()->removeListener(this);
+    InputSystem::get()->removeListener(inputManager);
 }
 
 void AppWindow::onSize() {
@@ -419,110 +460,69 @@ void AppWindow::onSize() {
     draw();
 }
 
-void AppWindow::onKeyDown(int key) {
-    if (!playState) {
-        return;
-    }
-
-    if (key == 'W') {
-        forward = 1.0f;
-    }
-    else if (key == 'S') {
-        forward = -1.0f;
-    }
-
-    if (key =='A') {
-        right = -1.0f;
-    }
-    else if (key == 'D') {
-        right = 1.0f;
-    }
-
-    if (key == ' ') {
-        up = 1.0;
-    }
-    // SHIFT
-    else if (key == 16) {
-        up = -1.0f;
-    }
-
-    camera.updateMovement(forward, right, up, flyingMode);
-}
-
-void AppWindow::onKeyUp(int key) {
-    forward = 0.0f;
-    right = 0.0f;
-    up = 0.0f;
-
-    if (key == 'G') {
-        flyingMode = !flyingMode;
-    }
-
-    camera.updateMovement(forward, right, up, flyingMode);
-
-    // TAB
-    if (key == 9) {
-        playState = !playState;
-        InputSystem::get()->showCursor(!playState);
-
-        RECT windowSize = getWindowRect();
-        RECT windowPos = getWindowPosition();
-
-        float width = (float) (windowSize.right - windowSize.left);
-        float height = (float) (windowSize.bottom - windowSize.top);
-
-        float middleX = (float) windowPos.right - (width / 2.0f);
-        float middleY = (float) windowPos.bottom - (height / 2.0f);
-
-        InputSystem::get()->setCursorPosition(Point2f(middleX, middleY));
-    }
-
-    if (key == 'F') {
-        fullscreen = !fullscreen;
-        RECT screenSize = getScreenSize();
-        swapchain->setFullscreen(fullscreen, screenSize.right, screenSize.bottom);
-
-    }
-
-}
-
-void AppWindow::onMouseMove(const Point2f& mousePos) {
-    if (!playState) {
-        return;
-    }
-
+Point2f AppWindow::getWindowCenter() {
     RECT windowSize = getWindowRect();
     RECT windowPos = getWindowPosition();
 
-    float width = (float)(windowSize.right - windowSize.left);
-    float height = (float)(windowSize.bottom - windowSize.top);
+    int width = (int)(windowSize.right - windowSize.left);
+    int height = (int)(windowSize.bottom - windowSize.top);
 
-    float middleX = (float)windowPos.right - (width / 2.0f);
-    float middleY = (float)windowPos.bottom - (height / 2.0f);
+    int middleX = (int)windowPos.right - (width / 2);
+    int middleY = (int)windowPos.bottom - (height / 2);
 
-    rotX += (mousePos.y - middleY) * (float) (deltaTime * 0.25f);
-    rotY += (mousePos.x - middleX) * (float) (deltaTime * 0.25f);
+    return Point2f(middleX, middleY);
+}
 
-    if (rotX >= 1.57f) {
-        rotX = 1.57f;
+void AppWindow::updateInputEvents() {
+
+    if (!inputManager->getKeyTapState(9)) {
+        playState = !playState;
+        InputSystem::get()->showCursor(!playState);
+        InputSystem::get()->setCursorPosition(getWindowCenter());
     }
-    else if (rotX <= -1.57f) {
-        rotX = -1.57f;
+
+    if (!inputManager->getKeyTapState('F')) {
+        fullscreen = !fullscreen;
+        RECT screenSize = getScreenSize();
+        swapchain->setFullscreen(fullscreen, screenSize.right, screenSize.bottom);
+        InputSystem::get()->setCursorPosition(getWindowCenter());
     }
 
-    camera.updateMouse(rotX, rotY);
+    // play state
+    if (playState) {
+        Point2f windowCenter = getWindowCenter();
+        InputSystem::get()->setCursorPosition(windowCenter);
 
-    InputSystem::get()->setCursorPosition(Point2f(middleX, middleY));
-}
+        // flying mode
+        if (!inputManager->getKeyTapState('G')) {
+            flyingMode = !flyingMode;
+        }
 
-void AppWindow::onLeftMouseDown(const Point2f& mousePos) {
-}
+        // moving
+        forward = inputManager->getKeyHoldState('W') - inputManager->getKeyHoldState('S');
+        right = inputManager->getKeyHoldState('D') - inputManager->getKeyHoldState('A');
+        up = inputManager->getKeyHoldState(' ') - inputManager->getKeyHoldState(16);
 
-void AppWindow::onLeftMouseUp(const Point2f& mousePos) {
-}
+        // looking
+        Point2f mouse = inputManager->getMousePosition();
+        rotX += (mouse.y - windowCenter.y) * (float) deltaTime * 0.25f;
+        rotY += (mouse.x - windowCenter.x) * (float) deltaTime * 0.25f;
+        InputSystem::get()->setCursorPosition(windowCenter);
 
-void AppWindow::onRightMouseDown(const Point2f& mousePos) {
-}
+        if (rotX >= 1.57f) {
+            rotX = 1.57f;
+        }
+        else if (rotX <= -1.57f) {
+            rotX = -1.57f;
+        }
 
-void AppWindow::onRightMouseUp(const Point2f& mousePos) {
+        // update camera
+        camera.updateMouse(rotX, rotY);
+        camera.updateMovement(forward, right, up, flyingMode);
+
+    }
+
+    // placing entities
+    click = 2 * inputManager->getMouseState(InputManager::LMB_STATE) - 1;
+    canPlaceEntity = inputManager->getMouseState(InputManager::LMB_STATE);
 }

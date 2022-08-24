@@ -9,7 +9,7 @@ PerlinNoise::PerlinNoise() {
 PerlinNoise::~PerlinNoise() {
 }
 
-float* PerlinNoise::generateSeed1D(unsigned int length, bool overlap, float* output) {
+float* PerlinNoise::generateSeed1D(unsigned int length, float scale, bool overlap, float* output) {
 	output = new float[length];
 	float* result = new float[length];
 
@@ -19,21 +19,22 @@ float* PerlinNoise::generateSeed1D(unsigned int length, bool overlap, float* out
 	if (overlap && length > 1) {
 		start = 1;
 		end = length - 1;
-		result[start] = 0.5f;
-		result[end] = 0.5f;
-		output[start] = 0.5f;
-		output[end] = 0.5f;
+		float size = scale / 2.0f;
+		result[start] = size;
+		result[end] = size;
+		output[start] = size;
+		output[end] = size;
 	}
 
 	for (int i = start; i < end; i++) {
-		result[i] = (float) rand() / (float) RAND_MAX;
+		result[i] = ((float) rand() / (float) RAND_MAX) * scale;
 		output[i] = result[i];
 	}
 
 	return result;
 }
 
-float** PerlinNoise::generateSeed2D(unsigned int length, bool overlap, float** output) {
+float** PerlinNoise::generateSeed2D(unsigned int length, float scale, bool overlap, float** output) {
 	unsigned int size = length * length;
 
 	output = new float*[length];
@@ -50,22 +51,23 @@ float** PerlinNoise::generateSeed2D(unsigned int length, bool overlap, float** o
 	if (overlap && length > 1) {
 		start = 1;
 		end = length - 1;
+		float size = scale / 2.0f;
 		for (int i = 0; i < length; i++) {
-			result[i][0] = 0.5f;
-			result[0][i] = 0.5f;
-			result[length - 1][i] = 0.5f;
-			result[i][length - 1] = 0.5f;
+			result[i][0] = size;
+			result[0][i] = size;
+			result[length - 1][i] = size;
+			result[i][length - 1] = size;
 
-			output[i][0] = 0.5f;
-			output[0][i] = 0.5f;
-			output[length - 1][i] = 0.5f;
-			output[i][length - 1] = 0.5f;
+			output[i][0] = size;
+			output[0][i] = size;
+			output[length - 1][i] = size;
+			output[i][length - 1] = size;
 		}
 	}
 
 	for (int i = start; i < end; i++) {
 		for (int j = start; j < end; j++) {
-			result[i][j] = (float)rand() / (float)RAND_MAX;
+			result[i][j] = ((float)rand() / (float)RAND_MAX) * scale;
 			output[i][j] = result[i][j];
 		}
 	}
