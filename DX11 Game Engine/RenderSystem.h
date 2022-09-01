@@ -4,10 +4,22 @@
 
 #include "Prerequisites.h"
 
-enum CULL_MODE {
-    CULL_FRONT,
-    CULL_NONE,
-    CULL_BACK,
+#include "DeviceContext.h"
+#include "SwapChain.h"
+
+#include "VertexBuffer.h"
+#include "InstanceBuffer.h"
+#include "IndexBuffer.h"
+#include "ConstantBuffer.h"
+
+#include "VertexShader.h"
+#include "PixelShader.h"
+
+enum RASTER_MODE {
+    RASTER_CULL_FRONT,
+    RASTER_CULL_BACK,
+    RASTER_CULL_NONE,
+    RASTER_WIREFRAME,
 };
 
 class RenderSystem {
@@ -19,7 +31,8 @@ public:
 
     DeviceContextPtr getImmediateDeviceContext();
 
-    VertexBufferPtr createVertexBuffer(void* listVertices, UINT sizeVertex, UINT sizeList, void* shaderByteCode, UINT sizeByteShaderCode);
+    VertexBufferPtr createVertexBuffer(void* listVertices, UINT sizeVertex, UINT sizeList, INPUT_LAYOUT layout, void* shaderByteCode, UINT sizeByteShaderCode);
+    InstanceBufferPtr createInstanceBuffer(void* instances, UINT dataSize, UINT numInstances, void* shaderByteCode, UINT sizeByteShaderCode);
     IndexBufferPtr createIndexBuffer(void* listIndices, UINT sizeList);
     ConstantBufferPtr createConstantBuffer(void* buffer, UINT sizeBuffer);
 
@@ -31,7 +44,7 @@ public:
     void releaseCompiledShader();
 
 public:
-    void setRasterizerState(CULL_MODE mode);
+    void setRasterizerState(RASTER_MODE mode);
 private:
     void initRasterizerState();
     void initBlendState();
@@ -48,6 +61,7 @@ private:
 
     friend class SwapChain;
     friend class VertexBuffer;
+    friend class InstanceBuffer;
     friend class IndexBuffer;
     friend class ConstantBuffer;
     friend class VertexShader;
@@ -66,6 +80,8 @@ private:
     ID3D11RasterizerState* cullFrontState = nullptr;
     ID3D11RasterizerState* cullBackState = nullptr;
     ID3D11RasterizerState* cullNoneState = nullptr;
+
+    ID3D11RasterizerState* wireframeState = nullptr;
 
     ID3D11BlendState* blendState = nullptr;
 };

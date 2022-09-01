@@ -58,31 +58,7 @@ void AppWindow::draw() {
     drawMesh(skyMesh, materialsList, arr);
 
 
-    GraphicsEngine::get()->getRenderSystem()->setRasterizerState(CULL_BACK);
-
-    // draw terrain
-    updateTerrain();
-    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(vertexShader);
-    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(terrainPS);
-
-    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVSConstantBuffer(0, transformBuffer);
-    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVSConstantBuffer(1, lightingBuffer);
-    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPSConstantBuffer(0, transformBuffer);
-    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPSConstantBuffer(1, lightingBuffer);
-
-    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPSTextureArray(0, terrainTextures, terrainTextures->size());
-
-    auto chunks = terrainManager->getChunks();
-
-    for (int i = 0; i < chunks.size(); i++) {
-        auto chunk = chunks[i];
-        if (chunk->getVertexBuffer() && chunk->getIndexBuffer()) {
-            GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexBuffer(chunk->getVertexBuffer());
-            GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(chunk->getIndexBuffer());
-
-            GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(chunk->getIndexBuffer()->getSizeIndexList(), 0, 0);
-        }
-    }
+    GraphicsEngine::get()->getRenderSystem()->setRasterizerState(RASTER_CULL_BACK);
 
     // Scene
     updateModel(camera.getMousePosition());
@@ -90,7 +66,7 @@ void AppWindow::draw() {
     materialsList.clear();
     materialsList.push_back(branchMaterial);
     materialsList.push_back(barkMaterial);
-    drawMesh(pinetreeMesh, materialsList, arr1);
+    drawMesh(crosshairMesh, materialsList, arr1);
 
     // pine tree
     for (int i = 0; i < 256; i++) {
@@ -105,6 +81,34 @@ void AppWindow::draw() {
 
     // draw entities
     ecs.draw();
+
+    // draw grass
+    if (grassSystem) {
+        GraphicsEngine::get()->getRenderSystem()->setRasterizerState(RASTER_CULL_NONE);
+        updateGrass();
+        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(grassVertexShader);
+        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVSConstantBuffer(0, transformBuffer);
+        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(grassPixelShader);
+        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPSTexture(0, grassSystem->getTexture());
+        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexAndInstanceBuffer(grassSystem->getVertexBuffer(), grassSystem->getInstanceBuffer());
+        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(grassSystem->getIndexBuffer());
+        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedInstanced(grassSystem->getIndexCount(), 500 * 500);
+    }
+
+    // LODTerrain
+    if (lodTerrain) {
+        updateTerrain();
+        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPSTextureArray(0, terrainTextures, terrainTextures->size());
+
+        float size = 2048.0f;
+        QTRect area = {
+            { camera.getWorldPosition().x - (size / 2.0f), camera.getWorldPosition().z - (size / 2.0f) },
+            { size, size },
+        };
+        lodTerrain->setViewArea(area);
+        lodTerrain->loadChunks();
+        lodTerrain->draw(vertexShader, terrainPS, transformBuffer, lightingBuffer);
+    }
 
     // show swapchain
     swapchain->present(true);
@@ -183,6 +187,17 @@ void AppWindow::updateModel(Vec3f position) {
     lightingBuffer->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &lightBuffer);
 }
 
+void AppWindow::updateGrass() {
+    // constant buffer update
+    TransformBuffer transBuffer;
+
+    transBuffer.world.setIdentity();
+    transBuffer.view = camera.getView();
+    transBuffer.proj = camera.getProj();
+
+    transformBuffer->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &transBuffer);
+}
+
 void AppWindow::drawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr>& materials, ConstantBufferPtr cBuffer[]) {
 
     // set vertex buffer and index buffer
@@ -222,8 +237,8 @@ void AppWindow::placeEntity() {
         tree.transform.position = camera.getMousePosition();
         tree.transform.camera = &camera;
         tree.drawable.vertexShader = vertexShader;
-        tree.drawable.pixelShader = basicPS;
-        tree.drawable.boundingboxShader = boundingBoxShader;
+        tree.drawable.pixelShader = rainbowShader;
+        tree.drawable.boundingboxShader = nullptr;
         tree.drawable.addBuffer(TRANSFORM, transformBuffer);
         tree.drawable.addBuffer(LIGHTING, lightingBuffer);
         tree.drawable.mesh = deadTreeMesh;
@@ -278,6 +293,11 @@ void AppWindow::onCreate() {
     vertexShader = GraphicsEngine::get()->getRenderSystem()->createVertexShader(shaderByteCode, sizeShaderByteCode);
     GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
 
+    // GRASS VERTEX SHADER
+    GraphicsEngine::get()->getRenderSystem()->compileVertexShader(L"GrassVertexShader.hlsl", "main", &shaderByteCode, &sizeShaderByteCode);
+    grassVertexShader = GraphicsEngine::get()->getRenderSystem()->createVertexShader(shaderByteCode, sizeShaderByteCode);
+    GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
+
     // PIXEL SHADER
     GraphicsEngine::get()->getRenderSystem()->compilePixelShader(L"PixelShader.hlsl", "main", &shaderByteCode, &sizeShaderByteCode);
     basicPS = GraphicsEngine::get()->getRenderSystem()->createPixelShader(shaderByteCode, sizeShaderByteCode);
@@ -308,16 +328,27 @@ void AppWindow::onCreate() {
     boundingBoxShader = GraphicsEngine::get()->getRenderSystem()->createPixelShader(shaderByteCode, sizeShaderByteCode);
     GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
 
+    // RAINBOW SHADER
+    GraphicsEngine::get()->getRenderSystem()->compilePixelShader(L"RainbowShader.hlsl", "main", &shaderByteCode, &sizeShaderByteCode);
+    rainbowShader = GraphicsEngine::get()->getRenderSystem()->createPixelShader(shaderByteCode, sizeShaderByteCode);
+    GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
+
+    // RAINBOW SHADER
+    GraphicsEngine::get()->getRenderSystem()->compilePixelShader(L"GrassPixelShader.hlsl", "main", &shaderByteCode, &sizeShaderByteCode);
+    grassPixelShader = GraphicsEngine::get()->getRenderSystem()->createPixelShader(shaderByteCode, sizeShaderByteCode);
+    GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
+
     // END CREATE SHADERS
 
     // START CREATE MATERIALS
     skyMaterial = GraphicsEngine::get()->createMaterial(L"VertexShader.hlsl", L"SkyboxShader.hlsl", 1);
     skyMaterial->addTexture(sky);
-    skyMaterial->setCullMode(CULL_FRONT);
+    skyMaterial->setCullMode(RASTER_CULL_FRONT);
     // END CREATE MATERIALS
 
     sceneMesh = GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\scene1.obj");
     pinetreeMesh = GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\pine_tree.obj");
+    crosshairMesh = GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\crosshair.obj");
 
     barkTexture = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\bark.png");
     branchTexture = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\pine_branch.png");
@@ -325,15 +356,15 @@ void AppWindow::onCreate() {
 
     barkMaterial = GraphicsEngine::get()->createMaterial(L"VertexShader.hlsl", L"PixelShader.hlsl", 1);
     barkMaterial->addTexture(barkTexture);
-    barkMaterial->setCullMode(CULL_BACK);
+    barkMaterial->setCullMode(RASTER_CULL_BACK);
 
     boxMaterial = GraphicsEngine::get()->createMaterial(L"VertexShader.hlsl", L"PixelShader.hlsl", 1);
     boxMaterial->addTexture(boxTexture);
-    boxMaterial->setCullMode(CULL_BACK);
+    boxMaterial->setCullMode(RASTER_CULL_BACK);
 
     branchMaterial = GraphicsEngine::get()->createMaterial(L"VertexShader.hlsl", L"PixelShader.hlsl", 1);
     branchMaterial->addTexture(branchTexture);
-    branchMaterial->setCullMode(CULL_NONE);
+    branchMaterial->setCullMode(RASTER_CULL_NONE);
     
     // CONSTANT BUFFERS
     TransformBuffer tb;
@@ -343,17 +374,17 @@ void AppWindow::onCreate() {
     lightingBuffer = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&lb, sizeof(LightingBuffer));
     pointLightBuffer = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&plb, sizeof(PointLightBuffer));
 
-    // Terrain
-    terrainManager = new TerrainManager(2, 2, 1024);
+    // Grass
+    grassSystem = new GrassSystem(500 * 500, lodTerrain);
     
     // Camera
-    camera = Camera{terrainManager};
+    camera = Camera{lodTerrain};
     camera.getWorld().setTranslation(Vec3f(16, 256, 16));
 
     for (int i = 0; i < 256; i++) {
-        float x = (float) (rand() % 1024);
-        float z = (float) (rand() % 1024);
-        float y = terrainManager->getHeightAt(x, z);
+        float x = (float) (rand() % 512);
+        float z = (float) (rand() % 512);
+        float y = lodTerrain->getHeightAt(x, z);
         positions.push_back(Vec3f(x, y, z));
     }
 
@@ -391,7 +422,7 @@ void AppWindow::onCreate() {
 
     EntityPlayerHand playerHand{};
     playerHand.transform.position = Vec3f(-0.5f, -0.5f, 0.5f);
-    playerHand.transform.rotation = Vec3f(0, PI / 2, 0);
+    playerHand.transform.rotation = Vec3f(0, PI, 0);
     playerHand.transform.scale = Vec3f(0.25f, 0.25f, 0.25f);
     playerHand.transform.camera = &camera;
     playerHand.transform.attachedToCamera = true;
@@ -407,17 +438,37 @@ void AppWindow::onCreate() {
     ecs.addComponentToEntity<TransformComponent>(entity, playerHand.transform);
     ecs.addComponentToEntity<DrawableComponent>(entity, playerHand.drawable);
 
+    /*
+    EntityPlayerHand crosshair{};
+    crosshair.transform.position = Vec3f(0, 0, 0.2f);
+    crosshair.transform.rotation = Vec3f(0, PI, 0);
+    crosshair.transform.scale = Vec3f(0.01f, 0.01f, 0.01f);
+    crosshair.transform.camera = &camera;
+    crosshair.transform.attachedToCamera = true;
+    crosshair.transform.translateWithCameraXYZ = Vec3f(1, 1, 1);
+    crosshair.transform.rotateWithCameraXYZ = Vec3f(1, 1, 1);
+    crosshair.drawable.vertexShader = vertexShader;
+    crosshair.drawable.pixelShader = basicPS;
+    crosshair.drawable.addBuffer(TRANSFORM, transformBuffer);
+    crosshair.drawable.mesh = crosshairMesh;
+    crosshair.drawable.vertexShaderTextures = std::vector<TexturePtr>{  };
+    crosshair.drawable.pixelShaderTextures = std::vector<TexturePtr>{  };
+    entity = ecs.createEntity();
+    ecs.addComponentToEntity<TransformComponent>(entity, crosshair.transform);
+    ecs.addComponentToEntity<DrawableComponent>(entity, crosshair.drawable);
+    */
+
     for (int i = 0; i < 512; i++) {
         EntityTree tree{};
-        float tx = (float) (rand() % 1024);
-        float tz = (float) (rand() % 1024);
-        float ty = terrainManager->getHeightAt(tx, tz) - 1;
+        float tx = (float) (rand() % 256);
+        float tz = (float) (rand() % 256);
+        float ty = lodTerrain->getHeightAt(tx, tz) - 1;
         float ry = (float) (rand() % 4);
         tree.transform.position = Vec3f(tx, ty, tz);
         tree.transform.camera = &camera;
         tree.drawable.vertexShader = vertexShader;
-        tree.drawable.pixelShader = basicPS;
-        tree.drawable.boundingboxShader = boundingBoxShader;
+        tree.drawable.pixelShader = rainbowShader;
+        tree.drawable.boundingboxShader = nullptr;
         tree.drawable.addBuffer(TRANSFORM, transformBuffer);
         tree.drawable.addBuffer(LIGHTING, lightingBuffer);
         tree.drawable.mesh = deadTreeMesh;
@@ -432,7 +483,6 @@ void AppWindow::onCreate() {
         ecs.addComponentToEntity<LightingComponent>(entity, tree.lighting);
         ecs.addComponentToEntity<PickableComponent>(entity, tree.pickable);
     }
-
 }
 
 void AppWindow::onUpdate() {
@@ -499,9 +549,9 @@ void AppWindow::updateInputEvents() {
         }
 
         // moving
-        forward = inputManager->getKeyHoldState('W') - inputManager->getKeyHoldState('S');
-        right = inputManager->getKeyHoldState('D') - inputManager->getKeyHoldState('A');
-        up = inputManager->getKeyHoldState(' ') - inputManager->getKeyHoldState(16);
+        forward = inputManager->getKeyPressState('W') - inputManager->getKeyPressState('S');
+        right = inputManager->getKeyPressState('D') - inputManager->getKeyPressState('A');
+        up = inputManager->getKeyPressState(VK_SPACE) - inputManager->getKeyPressState(VK_SHIFT);
 
         // looking
         Point2f mouse = inputManager->getMousePosition();
@@ -523,6 +573,6 @@ void AppWindow::updateInputEvents() {
     }
 
     // placing entities
-    click = 2 * inputManager->getMouseState(InputManager::LMB_STATE) - 1;
-    canPlaceEntity = inputManager->getMouseState(InputManager::LMB_STATE);
+    click = inputManager->getMouseState(InputManager::LMB_STATE) * 2 - 1;
+    canPlaceEntity = !inputManager->getMouseState(InputManager::LMB_STATE);
 }

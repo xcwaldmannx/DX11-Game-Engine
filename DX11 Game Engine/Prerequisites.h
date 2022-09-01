@@ -5,6 +5,7 @@
 class SwapChain;
 class DeviceContext;
 class VertexBuffer;
+class InstanceBuffer;
 class IndexBuffer;
 class ConstantBuffer;
 class VertexShader;
@@ -23,6 +24,7 @@ class Material;
 typedef std::shared_ptr<SwapChain> SwapChainPtr;
 typedef std::shared_ptr<DeviceContext> DeviceContextPtr;
 typedef std::shared_ptr<VertexBuffer> VertexBufferPtr;
+typedef std::shared_ptr<InstanceBuffer> InstanceBufferPtr;
 typedef std::shared_ptr<IndexBuffer> IndexBufferPtr;
 typedef std::shared_ptr<ConstantBuffer> ConstantBufferPtr;
 typedef std::shared_ptr<VertexShader> VertexShaderPtr;

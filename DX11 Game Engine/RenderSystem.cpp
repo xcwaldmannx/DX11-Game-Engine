@@ -2,15 +2,9 @@
 
 #include <exception>
 
-#include "SwapChain.h"
-#include "DeviceContext.h"
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
-#include "ConstantBuffer.h"
-#include "VertexShader.h"
-#include "PixelShader.h"
-
 #include <d3dcompiler.h>
+
+class VertexBuffer;
 
 RenderSystem::RenderSystem() {
     D3D_DRIVER_TYPE driverTypes[] = {
@@ -76,12 +70,21 @@ DeviceContextPtr RenderSystem::getImmediateDeviceContext() {
     return deviceContext;
 }
 
-VertexBufferPtr RenderSystem::createVertexBuffer(void* listVertices, UINT sizeVertex, UINT sizeList, void* shaderByteCode, UINT sizeByteShaderCode) {
+VertexBufferPtr RenderSystem::createVertexBuffer(void* listVertices, UINT sizeVertex, UINT sizeList, INPUT_LAYOUT layout, void* shaderByteCode, UINT sizeByteShaderCode) {
     VertexBufferPtr vbuffer = nullptr;
     try {
-        vbuffer = std::make_shared<VertexBuffer>(listVertices, sizeVertex, sizeList, shaderByteCode, sizeByteShaderCode, this);
+        vbuffer = std::make_shared<VertexBuffer>(listVertices, sizeVertex, sizeList, layout, shaderByteCode, sizeByteShaderCode, this);
     } catch (...) {}
     return vbuffer;
+}
+
+InstanceBufferPtr RenderSystem::createInstanceBuffer(void* instances, UINT dataSize, UINT numInstances, void* shaderByteCode, UINT sizeByteShaderCode) {
+    InstanceBufferPtr ibuffer = nullptr;
+    try {
+        ibuffer = std::make_shared<InstanceBuffer>(instances, dataSize, numInstances, shaderByteCode, sizeByteShaderCode, this);
+    }
+    catch (...) {}
+    return ibuffer;
 }
 
 IndexBufferPtr RenderSystem::createIndexBuffer(void* listIndices, UINT sizeList) {
@@ -148,16 +151,19 @@ void RenderSystem::releaseCompiledShader() {
     if (blob) blob->Release();
 }
 
-void RenderSystem::setRasterizerState(CULL_MODE mode) {
+void RenderSystem::setRasterizerState(RASTER_MODE mode) {
     switch (mode) {
-    case CULL_FRONT:
+    case RASTER_CULL_FRONT:
         d3dDeviceContext->RSSetState(cullFrontState);
         break;
-    case CULL_BACK:
+    case RASTER_CULL_BACK:
         d3dDeviceContext->RSSetState(cullBackState);
         break;
-    case CULL_NONE:
+    case RASTER_CULL_NONE:
         d3dDeviceContext->RSSetState(cullNoneState);
+        break;
+    case RASTER_WIREFRAME:
+        d3dDeviceContext->RSSetState(wireframeState);
         break;
     default:
         d3dDeviceContext->RSSetState(cullBackState);
@@ -167,17 +173,17 @@ void RenderSystem::setRasterizerState(CULL_MODE mode) {
 
 void RenderSystem::initRasterizerState() {
     D3D11_RASTERIZER_DESC desc = {};
+
+    desc.DepthClipEnable = true;
+    desc.MultisampleEnable = true;
     desc.FillMode = D3D11_FILL_WIREFRAME;
+    desc.CullMode = D3D11_CULL_BACK;
+    d3dDevice->CreateRasterizerState(&desc, &wireframeState);
+    desc.FillMode = D3D11_FILL_SOLID;
+    d3dDevice->CreateRasterizerState(&desc, &cullBackState);
 
     desc.CullMode = D3D11_CULL_FRONT;
-    desc.DepthClipEnable = true;
-    // desc.AntialiasedLineEnable = true;
-    desc.MultisampleEnable = true;
-    desc.FillMode = D3D11_FILL_SOLID;
     d3dDevice->CreateRasterizerState(&desc, &cullFrontState);
-
-    desc.CullMode = D3D11_CULL_BACK;
-    d3dDevice->CreateRasterizerState(&desc, &cullBackState);
 
     desc.CullMode = D3D11_CULL_NONE;
     d3dDevice->CreateRasterizerState(&desc, &cullNoneState);

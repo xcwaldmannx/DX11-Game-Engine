@@ -30,9 +30,6 @@ Mesh::Mesh(const wchar_t* fullPath) : Resource(fullPath) {
 		throw std::exception("Mesh could not be created.");
 	}
 
-	std::vector<VertexMesh> vertices;
-	std::vector<unsigned int> indices;
-
 	size_t sizeVertexIndexLists = 0;
 	for (size_t s = 0; s < shapes.size(); s++) {
 		sizeVertexIndexLists += shapes[s].mesh.indices.size();
@@ -97,7 +94,7 @@ Mesh::Mesh(const wchar_t* fullPath) : Resource(fullPath) {
 
 	GraphicsEngine::get()->getVertexMeshLayoutShaderByteCodeAndSize(&shaderByteCode, &sizeShaderByteCode);
 	vertexBuffer = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer(&vertices[0], sizeof(VertexMesh), (UINT) vertices.size(),
-		shaderByteCode, (UINT) sizeShaderByteCode);
+		VertexBuffer::INPUT_LAYOUT_STANDARD, shaderByteCode, (UINT) sizeShaderByteCode);
 
 	indexBuffer = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(&indices[0], (UINT) indices.size());
 
@@ -127,6 +124,16 @@ const MaterialSlot Mesh::getMaterialSlot(unsigned int slot) {
 size_t Mesh::materialSlotCount() {
 	return materialSlots.size();
 }
+
+std::vector<VertexMesh> Mesh::getVertices() {
+	return vertices;
+}
+
+std::vector<unsigned int> Mesh::getIndices() {
+	return indices;
+}
+
+std::vector<unsigned int> getIndices();
 
 const VertexBufferPtr& Mesh::getVertexBufferBB() {
 	return vertexBufferBB;
@@ -212,7 +219,7 @@ void Mesh::generateAABB() {
 
 	GraphicsEngine::get()->getVertexMeshLayoutShaderByteCodeAndSize(&shaderByteCode, &sizeShaderByteCode);
 	vertexBufferBB = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer(&verticesBB[0], sizeof(Vec3f), (UINT)verticesBB.size(),
-		shaderByteCode, (UINT)sizeShaderByteCode);
+		VertexBuffer::INPUT_LAYOUT_STANDARD, shaderByteCode, (UINT)sizeShaderByteCode);
 
 	indexBufferBB = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(&indicesBB[0], (UINT)indicesBB.size());
 }

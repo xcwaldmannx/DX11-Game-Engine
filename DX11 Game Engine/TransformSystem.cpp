@@ -12,6 +12,9 @@ void TransformSystem::update(long double deltaTime) {
         auto& transform = coordinator.getComponent<TransformComponent>(entity);
         auto& drawable = coordinator.getComponent<DrawableComponent>(entity);
 
+        if (!&drawable || !&transform)
+            continue;
+
         TransformBuffer* transformBuffer = new TransformBuffer{};
 
         // TRANSFORM BUFFER

@@ -139,6 +139,21 @@
     <Filter Include="GameEngine\InputSystem\InputManager">
       <UniqueIdentifier>{a66660d7-7180-424c-8184-8dcc5ee9faec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="App\Shaders\RainbowShader">
+      <UniqueIdentifier>{d4183bd0-a7c4-4955-b0fd-bcf37f4f8d1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\Shaders\GrassShader">
+      <UniqueIdentifier>{c63fd773-9d9e-443c-9c73-684550eda138}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GrassSystem">
+      <UniqueIdentifier>{7f829a67-8c51-4af1-9e3a-570ee8e42d7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\InstanceBuffer">
+      <UniqueIdentifier>{94d60658-c160-43d4-b195-a978013a510f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\InputLayout">
+      <UniqueIdentifier>{6b61da9a-3fbc-4f97-8374-81fe43c4d9fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppWindow.cpp">
@@ -219,20 +234,11 @@
     <ClCompile Include="PerlinNoise.cpp">
       <Filter>GameEngine\TerrainSystem\PerlinNoise</Filter>
     </ClCompile>
-    <ClCompile Include="TerrainManager.cpp">
-      <Filter>GameEngine\TerrainSystem</Filter>
-    </ClCompile>
     <ClCompile Include="ThreadPool.cpp">
       <Filter>GameEngine\ThreadingSystem</Filter>
     </ClCompile>
-    <ClCompile Include="Terrain.cpp">
-      <Filter>GameEngine\TerrainSystem</Filter>
-    </ClCompile>
     <ClCompile Include="ThreadRegulator.cpp">
       <Filter>GameEngine\ThreadingSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="QuadTree.cpp">
-      <Filter>DataStructures\QuadTree</Filter>
     </ClCompile>
     <ClCompile Include="TransformSystem.cpp">
       <Filter>GameEngine\EntitySystem\ECS\System\Transform</Filter>
@@ -254,6 +260,21 @@
     </ClCompile>
     <ClCompile Include="InputManager.cpp">
       <Filter>GameEngine\InputSystem\InputManager</Filter>
+    </ClCompile>
+    <ClCompile Include="GrassSystem.cpp">
+      <Filter>GameEngine\GrassSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="InstanceBuffer.cpp">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\InstanceBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticQuadTree.cpp">
+      <Filter>DataStructures\QuadTree</Filter>
+    </ClCompile>
+    <ClCompile Include="LODTerrain.cpp">
+      <Filter>GameEngine\TerrainSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="InputLayout.cpp">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\InputLayout</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -392,14 +413,8 @@
     <ClInclude Include="PerlinNoise.h">
       <Filter>GameEngine\TerrainSystem\PerlinNoise</Filter>
     </ClInclude>
-    <ClInclude Include="TerrainManager.h">
-      <Filter>GameEngine\TerrainSystem</Filter>
-    </ClInclude>
     <ClInclude Include="ThreadPool.h">
       <Filter>GameEngine\ThreadingSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="Terrain.h">
-      <Filter>GameEngine\TerrainSystem</Filter>
     </ClInclude>
     <ClInclude Include="ThreadRegulator.h">
       <Filter>GameEngine\ThreadingSystem</Filter>
@@ -412,9 +427,6 @@
     </ClInclude>
     <ClInclude Include="Threader.h">
       <Filter>GameEngine\ThreadingSystem\notmine</Filter>
-    </ClInclude>
-    <ClInclude Include="QuadTree.h">
-      <Filter>DataStructures\QuadTree</Filter>
     </ClInclude>
     <ClInclude Include="TransformSystem.h">
       <Filter>GameEngine\EntitySystem\ECS\System\Transform</Filter>
@@ -436,6 +448,21 @@
     </ClInclude>
     <ClInclude Include="InputManager.h">
       <Filter>GameEngine\InputSystem\InputManager</Filter>
+    </ClInclude>
+    <ClInclude Include="GrassSystem.h">
+      <Filter>GameEngine\GrassSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="InstanceBuffer.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\InstanceBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticQuadTree.h">
+      <Filter>DataStructures\QuadTree</Filter>
+    </ClInclude>
+    <ClInclude Include="LODTerrain.h">
+      <Filter>GameEngine\TerrainSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="InputLayout.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\InputLayout</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -460,10 +487,19 @@
     <None Include="VertexMeshLayoutShader.hlsl">
       <Filter>GameEngine\GraphicsEngine</Filter>
     </None>
+    <None Include="GrassPixelShader.hlsl">
+      <Filter>App\Shaders\GrassShader</Filter>
+    </None>
+    <None Include="GrassVertexShader.hlsl">
+      <Filter>App\Shaders\GrassShader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="BoundingBoxShader.hlsl">
       <Filter>App\Shaders\BoundingBoxShader</Filter>
+    </FxCompile>
+    <FxCompile Include="RainbowShader.hlsl">
+      <Filter>App\Shaders\RainbowShader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

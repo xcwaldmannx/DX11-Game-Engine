@@ -14,7 +14,8 @@ public:
     InputManager();
     ~InputManager();
 
-    float getKeyHoldState(char key);
+    bool getKeyHoldState(char key, float duration);
+    float getKeyPressState(char key);
     float getKeyTapState(char key);
 
     float getMouseState(MOUSE_STATE state);
@@ -35,10 +36,12 @@ public:
     const static MOUSE_STATE RMB_STATE  = 3;
 
 private:
+    // Tracks the duration a key was held for.
+    float keyHoldStates[256] = {};
     // Tracks if a key is up or down.
-    std::unordered_map<char, float> keyHoldStates;
+    float keyPressStates[256] = {};
     // Tracks if a key is tapped and released.
-    std::unordered_map<char, float> keyTapStates;
+    float keyTapStates[256] = {};
 
     Point2f position;
     Point2f delta;

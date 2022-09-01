@@ -19,8 +19,8 @@ public:
 
 	void setData(void* data, unsigned int size);
 
-	void setCullMode(CULL_MODE mode);
-	CULL_MODE getCullMode();
+	void setCullMode(RASTER_MODE mode);
+	RASTER_MODE getCullMode();
 
 private:
 	VertexShaderPtr vertexShader = nullptr;
@@ -31,7 +31,7 @@ private:
 	unsigned int textureCount = 1;
 	TextureArrayPtr textures = nullptr;
 
-	CULL_MODE cullMode = CULL_BACK;
+	RASTER_MODE cullMode = RASTER_CULL_BACK;
 
 	friend class GraphicsEngine;
 };

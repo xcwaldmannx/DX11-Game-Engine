@@ -4,6 +4,7 @@
 
 #include "SwapChain.h"
 #include "VertexBuffer.h"
+#include "InstanceBuffer.h"
 #include "IndexBuffer.h"
 #include "ConstantBuffer.h"
 #include "VertexShader.h"
@@ -49,15 +50,38 @@ void DeviceContext::drawTriangleStrip(UINT vertexCount, UINT startVertexIndex) {
 	deviceContext->Draw(vertexCount, startVertexIndex);
 }
 
-void DeviceContext::drawWireframe(UINT indexCount, UINT startVertexIndex, UINT startIndexIndex) {
+void DeviceContext::drawIndexedLineList(UINT indexCount, UINT startVertexIndex, UINT startIndexIndex) {
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 	deviceContext->DrawIndexed(indexCount, startIndexIndex, startVertexIndex);
+}
+
+void DeviceContext::drawInstanced(UINT vertexCount, UINT instanceCount) {
+	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	deviceContext->DrawInstanced(vertexCount, instanceCount, 0, 0);
+}
+
+void DeviceContext::drawIndexedInstanced(UINT indexCount, UINT instanceCount) {
+	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	deviceContext->DrawIndexedInstanced(indexCount, instanceCount, 0, 0, 0);
 }
 
 void DeviceContext::setVertexBuffer(const VertexBufferPtr& vertexBuffer) {
 	UINT stride = vertexBuffer->sizeVertex;
 	UINT offset = 0;
 	deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer->buffer, &stride, &offset);
+	deviceContext->IASetInputLayout(vertexBuffer->layout);
+}
+
+void DeviceContext::setVertexBuffer(const VertexBufferPtr& vertexBuffer, UINT* stride, UINT* offset) {
+	deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer->buffer, stride, offset);
+	deviceContext->IASetInputLayout(vertexBuffer->layout);
+}
+
+void DeviceContext::setVertexAndInstanceBuffer(const VertexBufferPtr& vertexBuffer, const InstanceBufferPtr& instanceBuffer) {
+	ID3D11Buffer* array[2] = {vertexBuffer->buffer, instanceBuffer->buffer};
+	UINT strides[2] = {vertexBuffer->sizeVertex, instanceBuffer->dataSize};
+	UINT offsets[2] = {0, 0};
+	deviceContext->IASetVertexBuffers(0, 2, array, strides, offsets);
 	deviceContext->IASetInputLayout(vertexBuffer->layout);
 }
 

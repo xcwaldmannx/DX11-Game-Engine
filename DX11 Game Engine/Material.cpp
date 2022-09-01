@@ -52,10 +52,10 @@ void Material::setData(void* data, unsigned int size) {
     }
 }
 
-void Material::setCullMode(CULL_MODE mode) {
+void Material::setCullMode(RASTER_MODE mode) {
     cullMode = mode;
 }
 
-CULL_MODE Material::getCullMode() {
+RASTER_MODE Material::getCullMode() {
     return cullMode;
 }

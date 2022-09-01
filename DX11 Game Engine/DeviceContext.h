@@ -14,9 +14,15 @@ public:
 	void drawTriangleList(UINT vertexCount, UINT startVertexIndex);
 	void drawIndexedTriangleList(UINT indexCount, UINT startVertexIndex, UINT startIndexIndex);
 	void drawTriangleStrip(UINT vertexCount, UINT startVertexIndex);
-	void drawWireframe(UINT indexCount, UINT startVertexIndex, UINT startIndexIndex);
+	void drawIndexedLineList(UINT indexCount, UINT startVertexIndex, UINT startIndexIndex);
+	void drawInstanced(UINT vertexCount, UINT instanceCount);
+	void drawIndexedInstanced(UINT indexCount, UINT instanceCount);
 
 	void setVertexBuffer(const VertexBufferPtr& vertexBuffer);
+	void setVertexBuffer(const VertexBufferPtr& vertexBuffer, UINT* stride, UINT* offset);
+
+	void setVertexAndInstanceBuffer(const VertexBufferPtr& vertexBuffer, const InstanceBufferPtr& instanceBuffer);
+
 	void setIndexBuffer(const IndexBufferPtr& indexBuffer);
 
 	void setVSConstantBuffer(UINT slot, const ConstantBufferPtr& constantBuffer);

@@ -3,11 +3,11 @@
 #include "Prerequisites.h"
 #include "Mat4f.h"
 #include "Window.h"
-#include "TerrainManager.h"
+#include "LODTerrain.h"
 
 class Camera {
 public:
-	Camera(TerrainManager* terrainManager);
+	Camera(LODTerrain* terrain);
 	~Camera();
 
 	void updateView(Window* window, long double deltaTime);
@@ -24,7 +24,7 @@ private:
 	Window* m_window = nullptr;
 
 	// terrain
-	TerrainManager* terrainManager;
+	LODTerrain* terrain;
 
 	// view
 	Mat4f m_worldCamera{};
@@ -49,8 +49,9 @@ private:
 
 	// jumping
 	bool m_isInAir = false;
-	float m_gravity = 0.0f;
-	float m_weight = 0.1f;
+	float m_gravity = -4.9f;
+	float m_mass = 1.0f;
+	float jumpForceN = 25.0f;
 
 	// mouse picking
 	Vec3f mouseOrigin{};

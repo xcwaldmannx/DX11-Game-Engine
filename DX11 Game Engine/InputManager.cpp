@@ -1,9 +1,10 @@
 #include "InputManager.h"
 
 InputManager::InputManager() {
-	for (int i = 0; i < 128; i++) {
-		keyHoldStates.insert({i, 0.0f});
-		keyTapStates.insert({i, -1.0f});
+	for (int i = 0; i < 256; i++) {
+		keyHoldStates[i] = 0.0f;
+		keyPressStates[i] = 0.0f;
+		keyTapStates[i] = -1.0f;
 	}
 
 	lmbState = 0.0f;
@@ -14,8 +15,12 @@ InputManager::InputManager() {
 InputManager::~InputManager() {
 }
 
-float InputManager::getKeyHoldState(char key) {
-	return keyHoldStates[key];
+bool InputManager::getKeyHoldState(char key, float duration) {
+	return keyHoldStates[key] >= duration;
+}
+
+float InputManager::getKeyPressState(char key) {
+	return keyPressStates[key];
 }
 
 float InputManager::getKeyTapState(char key) {
@@ -42,38 +47,14 @@ const Point2f& InputManager::getMousePosition() {
 }
 
 void InputManager::onKeyDown(int key) {
-	std::unordered_map<char, float>::iterator hold = keyHoldStates.begin();
-	while (hold != keyHoldStates.end()) {
-		if (hold->first == key) {
-			hold->second = 1.0f;
-		}
-		hold++;
-	}
-
-	std::unordered_map<char, float>::iterator tap = keyTapStates.begin();
-	while (tap != keyTapStates.end()) {
-		if (tap->first == key) {
-			tap->second = 1.0f;
-		}
-		tap++;
-	}
+	keyHoldStates[key]++;
+	keyPressStates[key] = 1.0f;
+	keyTapStates[key] = 1.0f;
 }
 void InputManager::onKeyUp(int key) {
-	std::unordered_map<char, float>::iterator hold = keyHoldStates.begin();
-	while (hold != keyHoldStates.end()) {
-		if (hold->first == key) {
-			hold->second = 0.0f;
-		}
-		hold++;
-	}
-
-	std::unordered_map<char, float>::iterator tap = keyTapStates.begin();
-	while (tap != keyTapStates.end()) {
-		if (tap->first == key) {
-			tap->second = 0.0f;
-		}
-		tap++;
-	}
+	keyHoldStates[key] = 0.0f;
+	keyPressStates[key] = 0.0f;
+	keyTapStates[key] = 0.0f;
 }
 
 #include <iostream>

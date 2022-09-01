@@ -42,8 +42,15 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
         window->onKillFocus();
         break;
     }
-    default:
+    case WM_CLOSE: {
+        Window* window = (Window*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+        window->onDestroy();
+        PostQuitMessage(0);
+        break;
+    }
+    default: {
         return DefWindowProc(hwnd, msg, wparam, lparam);
+    }
     }
 
     return NULL;

@@ -46,7 +46,7 @@ void DrawableSystem::render() {
             GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(drawable.boundingboxShader);
             GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexBuffer(drawable.mesh->getVertexBufferBB());
             GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(drawable.mesh->getIndexBufferBB());
-            GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawWireframe(drawable.mesh->getIndexBufferBB()->getSizeIndexList(), 0, 0);
+            GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedLineList(drawable.mesh->getIndexBufferBB()->getSizeIndexList(), 0, 0);
         }
 
     }

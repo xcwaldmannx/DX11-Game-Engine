@@ -159,7 +159,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h" />
+    <ClInclude Include="GrassSystem.h" />
+    <ClInclude Include="InputLayout.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="InstanceBuffer.h" />
+    <ClInclude Include="LODTerrain.h" />
     <ClInclude Include="MousePicker.h" />
     <ClInclude Include="PerlinNoise.h" />
     <ClInclude Include="PickableSystem.h" />
@@ -187,10 +191,10 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshManager.h" />
     <ClInclude Include="PointLightSystem.h" />
-    <ClInclude Include="QuadTree.h" />
+    <ClInclude Include="StaticQuadTree.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Segment.h" />
-    <ClInclude Include="Terrain.h" />
-    <ClInclude Include="TerrainManager.h" />
     <ClInclude Include="TextureArray.h" />
     <ClInclude Include="ThreadCommon.h" />
     <ClInclude Include="Threader.h" />
@@ -226,11 +230,15 @@
     <ClCompile Include="DeviceContext.cpp" />
     <ClCompile Include="ECS.cpp" />
     <ClCompile Include="GraphicsEngine.cpp" />
+    <ClCompile Include="GrassSystem.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
+    <ClCompile Include="InputLayout.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="InputSystem.cpp" />
+    <ClCompile Include="InstanceBuffer.cpp" />
     <ClCompile Include="LightingSystem.cpp" />
+    <ClCompile Include="LODTerrain.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -240,9 +248,10 @@
     <ClCompile Include="PickableSystem.cpp" />
     <ClCompile Include="PlayableSystem.cpp" />
     <ClCompile Include="PointLightSystem.cpp" />
-    <ClCompile Include="QuadTree.cpp" />
-    <ClCompile Include="Terrain.cpp" />
-    <ClCompile Include="TerrainManager.cpp" />
+    <ClCompile Include="StaticQuadTree.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="TextureArray.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="ThreadRegulator.cpp" />
@@ -350,6 +359,33 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="BoundingBoxShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <None Include="GrassPixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="GrassVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
+    </None>
+    <FxCompile Include="RainbowShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>

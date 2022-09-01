@@ -28,10 +28,17 @@ public:
 	const MaterialSlot getMaterialSlot(unsigned int slot);
 	size_t materialSlotCount();
 
+	std::vector<VertexMesh> getVertices();
+	std::vector<unsigned int> getIndices();
+
+public:
 	const VertexBufferPtr& getVertexBufferBB();
 	const IndexBufferPtr& getIndexBufferBB();
 
 private:
+	std::vector<VertexMesh> vertices;
+	std::vector<unsigned int> indices;
+
 	VertexBufferPtr vertexBuffer = nullptr;
 	IndexBufferPtr indexBuffer = nullptr;
 
@@ -48,4 +55,3 @@ private:
 
 	friend class DeviceContext;
 };
-

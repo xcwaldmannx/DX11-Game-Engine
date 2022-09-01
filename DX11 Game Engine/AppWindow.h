@@ -18,8 +18,6 @@
 
 #include "Mat4f.h"
 
-#include "TerrainManager.h"
-
 #include "Camera.h"
 
 #include "ECS.h"
@@ -27,6 +25,10 @@
 #include "TextureArray.h"
 
 #include "InputManager.h"
+
+#include "GrassSystem.h"
+
+#include "LODTerrain.h"
 
 class AppWindow : public Window {
 public:
@@ -38,6 +40,7 @@ public:
     void updateSkybox();
     void updateTerrain();
     void updateModel(Vec3f position);
+    void updateGrass();
 
     void drawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr>& materials, ConstantBufferPtr cBuffer[]);
 
@@ -66,6 +69,7 @@ private:
 
     // Vertex Shader
     VertexShaderPtr vertexShader = nullptr;
+    VertexShaderPtr grassVertexShader = nullptr;
 
     // Pixel Shaders
     PixelShaderPtr basicPS = nullptr;
@@ -74,10 +78,11 @@ private:
     PixelShaderPtr pixelationPS = nullptr;
     PixelShaderPtr pointLightPS = nullptr;
     PixelShaderPtr boundingBoxShader = nullptr;
+    PixelShaderPtr rainbowShader = nullptr;
+    PixelShaderPtr grassPixelShader = nullptr;
 
     // Terrain
-    TerrainManager* terrainManager = nullptr;
-
+    LODTerrain* lodTerrain = new LODTerrain(32, 32, 1024);
     TexturePtr grassTexture = nullptr, dirtTexture = nullptr, pathTexture = nullptr, pathmapTexture = nullptr, heightmapTexture = nullptr;
     TextureArrayPtr terrainTextures = nullptr;
 
@@ -97,6 +102,9 @@ private:
     // dead tree
     MeshPtr deadTreeMesh = nullptr;
     TexturePtr deadTreeTex = nullptr;
+
+    // crosshair
+    MeshPtr crosshairMesh = nullptr;
 
     //scene
     MeshPtr sceneMesh = nullptr;
@@ -139,5 +147,8 @@ private:
 
     // Input    
     InputManager* inputManager = new InputManager();        
+
+    // Grass system
+    GrassSystem* grassSystem;
 
 };

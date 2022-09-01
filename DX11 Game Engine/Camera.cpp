@@ -4,7 +4,7 @@
 
 #include "InputSystem.h"
 
-Camera::Camera(TerrainManager* terrainManager) : terrainManager(terrainManager) {
+Camera::Camera(LODTerrain* terrain) : terrain(terrain) {
 }
 
 Camera::~Camera() {
@@ -26,37 +26,37 @@ void Camera::updateView(Window* window, long double deltaTime) {
     temp.setRotationY(m_rotY);
     camera *= temp;
 
-    float speed = 0.5f;
+    float speed = 5.0f * deltaTime;
 
     Vec3f camPosX;
     Vec3f camPosY;
     Vec3f camPosZ;
     Vec3f newCamPos;
+    Vec3f oldCamPos = m_worldCamera.getTranslation();
     float terrainHeight = 0;
 
     if (m_flyingMode) {
+        speed = 100.0f * deltaTime;
         camPosX = camera.getXDirection() * (m_right * speed);
         camPosY = camera.getYDirection() * (m_up * speed);
         camPosZ = camera.getZDirection() * (m_forward * speed);
         newCamPos = m_worldCamera.getTranslation() + camPosX + camPosY + camPosZ;
     } else {
-
-        camPosX = Vec3f(camera.getXDirection().x, 1, camera.getXDirection().z).normalize() * (m_right * speed);
-        camPosZ = Vec3f(camera.getZDirection().x, 1, camera.getZDirection().z).normalize() * (m_forward * speed);
+        camPosX = Vec3f(camera.getXDirection().x, 0, camera.getXDirection().z).normalize() * (m_right * speed);
+        camPosZ = Vec3f(camera.getZDirection().x, 0, camera.getZDirection().z).normalize() * (m_forward * speed);
         newCamPos = m_worldCamera.getTranslation() + camPosX + camPosZ;
-        if (terrainManager) terrainHeight = terrainManager->getHeightAt(newCamPos.x, newCamPos.z);
+        if (terrain) terrainHeight = terrain->getHeightAt(newCamPos.x, newCamPos.z);
 
         if (m_up == 1.0 && !m_isInAir) {
-            m_gravity = 5.0f;
-            newCamPos.y += m_gravity;
+            jumpForceN = 25.0f;
             m_isInAir = true;
         }
 
         if (m_isInAir) {
-            m_gravity -= m_weight;
-            newCamPos.y += m_gravity;
+            float forceN = m_mass * m_gravity;
+            newCamPos.y += jumpForceN * deltaTime;
+            jumpForceN += forceN;
             if (newCamPos.y - 1.5f <= terrainHeight) {
-                m_gravity = 0;
                 newCamPos.y = 1.5f + terrainHeight;
                 m_isInAir = false;
             }
@@ -107,13 +107,13 @@ Vec3f Camera::getMousePosition() {
     float maxDist = 100;
 
     for (int i = 0; i < maxDist; i++) {
-        if (testPosition.y < terrainManager->getHeightAt(testPosition.x, testPosition.z)) {
+        if (testPosition.y < terrain->getHeightAt(testPosition.x, testPosition.z)) {
             Vec3f middlePosition;
             for (int j = 0; j < maxDist; j++) {
                 float distBetween = Vec3f::dist(lastPosition, testPosition) / 2.0f;
                 middlePosition = lastPosition + m_worldCamera.getZDirection() * distBetween;
 
-                if (middlePosition.y < terrainManager->getHeightAt(middlePosition.x, middlePosition.z)) {
+                if (middlePosition.y < terrain->getHeightAt(middlePosition.x, middlePosition.z)) {
                     testPosition = middlePosition;
                 } else {
                     lastPosition = middlePosition;

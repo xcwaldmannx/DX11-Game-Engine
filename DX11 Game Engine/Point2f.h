@@ -18,6 +18,24 @@ public:
 
 	}
 
+	Point2f operator+ (Point2f p) {
+		return Point2f(x + p.x, y + p.y);
+	}
+
+	void operator+= (Point2f p) {
+		x += p.x;
+		y += p.y;
+	}
+
+	Point2f operator- (Point2f p) {
+		return Point2f(x - p.x, y - p.y);
+	}
+
+	void operator-= (Point2f p) {
+		x -= p.x;
+		y -= p.y;
+	}
+
 	float x = 0;
 	float y = 0;
 };
