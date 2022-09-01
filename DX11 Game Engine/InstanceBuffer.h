@@ -11,7 +11,7 @@ struct InstanceData {
 
 class InstanceBuffer {
 public:
-	InstanceBuffer(void* instances, UINT dataSize, UINT numInstances, void* shaderByteCode, UINT sizeByteShaderCode, RenderSystem* renderSystem);
+	InstanceBuffer(void* instances, UINT dataSize, UINT numInstances, RenderSystem* renderSystem);
 	~InstanceBuffer();
 
 private:

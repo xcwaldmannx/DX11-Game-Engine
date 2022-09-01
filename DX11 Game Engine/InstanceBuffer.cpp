@@ -2,8 +2,7 @@
 
 #include "RenderSystem.h"
 
-InstanceBuffer::InstanceBuffer(void* instances, UINT dataSize, UINT numInstances, void* shaderByteCode, UINT sizeByteShaderCode, RenderSystem* renderSystem)
-	: renderSystem(renderSystem), buffer(0) {
+InstanceBuffer::InstanceBuffer(void* instances, UINT dataSize, UINT numInstances, RenderSystem* renderSystem) : renderSystem(renderSystem), buffer(0) {
 	D3D11_BUFFER_DESC bufferDesc = {};
 	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	bufferDesc.ByteWidth = dataSize * numInstances;
@@ -19,7 +18,7 @@ InstanceBuffer::InstanceBuffer(void* instances, UINT dataSize, UINT numInstances
 	HRESULT result = renderSystem->d3dDevice->CreateBuffer(&bufferDesc, &initData, &buffer);
 
 	if (FAILED(result)) {
-		throw std::exception("VertexBuffer could not be created.");
+		throw std::exception("InstanceBuffer could not be created.");
 	}
 }
 

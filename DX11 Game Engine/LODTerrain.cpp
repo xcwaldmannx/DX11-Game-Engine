@@ -122,7 +122,7 @@ void LODTerrain::generateChunk(LODChunk* chunk) {
 				nz = heightD - heightU;
 			}
 
-			LODVertex vertex = {
+			Vertex vertex = {
 				vertex.position = Vec3f{ vx, vy, vz },
 				vertex.texcoord = Vec2f{ tx, ty },
 				vertex.normal = Vec3f{ nx, ny, nz }.normalize(),
@@ -156,10 +156,8 @@ void LODTerrain::generateChunk(LODChunk* chunk) {
 	void* shaderCode = nullptr;
 	size_t sizeShaderCode = 0;
 
-	GraphicsEngine::get()->getRenderSystem()->compileVertexShader(L"VertexMeshLayoutShader.hlsl", "main", &shaderCode, &sizeShaderCode);
-	chunk->vertexBuffer = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer(&chunk->vertices[0], sizeof(LODVertex), chunk->vertices.size(),
-		VertexBuffer::INPUT_LAYOUT_STANDARD, shaderCode, sizeShaderCode);
-	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
+	chunk->vertexBuffer = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer(&chunk->vertices[0], sizeof(Vertex), chunk->vertices.size());
+	// input layout creation ->
 	chunk->indexBuffer = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(&chunk->indices[0], (UINT)chunk->indices.size());
 
 	chunk->isProcessing = false;

@@ -219,7 +219,7 @@
     <ClInclude Include="SwapChain.h" />
     <ClInclude Include="Vec4f.h" />
     <ClInclude Include="VertexBuffer.h" />
-    <ClInclude Include="VertexMesh.h" />
+    <ClInclude Include="Vertex.h" />
     <ClInclude Include="VertexShader.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
@@ -332,7 +332,7 @@
       </EntryPointName>
       <FileType>Document</FileType>
     </None>
-    <None Include="VertexMeshLayoutShader.hlsl">
+    <None Include="VertexLayoutShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

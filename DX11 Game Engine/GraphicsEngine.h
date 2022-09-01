@@ -25,7 +25,7 @@ public:
     MaterialPtr createMaterial(const wchar_t* vertexShaderPath, const wchar_t* pixelShaderPath, unsigned int textureCount);
     void setMaterial(const MaterialPtr& material);
 
-    void getVertexMeshLayoutShaderByteCodeAndSize(void** byteCode, size_t* size);
+    void getVertexLayoutShaderData(void** byteCode, size_t* size);
 
 private:
     static GraphicsEngine* engine;

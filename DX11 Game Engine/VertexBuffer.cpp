@@ -4,8 +4,7 @@
 
 #include "RenderSystem.h"
 
-VertexBuffer::VertexBuffer(void* listVertices, UINT sizeVertex, UINT sizeList, INPUT_LAYOUT inputLayout, void* shaderByteCode, UINT sizeByteShaderCode,
-	RenderSystem* renderSystem) : renderSystem(renderSystem), buffer(0), layout(0) {
+VertexBuffer::VertexBuffer(void* listVertices, UINT sizeVertex, UINT sizeList, RenderSystem* renderSystem) : renderSystem(renderSystem), buffer(0) {
 	D3D11_BUFFER_DESC bufferDesc = {};
 	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	bufferDesc.ByteWidth = sizeVertex * sizeList;
@@ -23,27 +22,9 @@ VertexBuffer::VertexBuffer(void* listVertices, UINT sizeVertex, UINT sizeList, I
 	if (FAILED(result)) {
 		throw std::exception("VertexBuffer could not be created.");
 	}
-
-	UINT sizeLayout = 0;
-
-	switch (inputLayout) {
-	case INPUT_LAYOUT_STANDARD:
-		sizeLayout = ARRAYSIZE(layoutStandard);
-		result = renderSystem->d3dDevice->CreateInputLayout(layoutStandard, sizeLayout, shaderByteCode, sizeByteShaderCode, &this->layout);
-		break;
-	case INPUT_LAYOUT_STANDARD_INST:
-		sizeLayout = ARRAYSIZE(layoutStandardInst);
-		result = renderSystem->d3dDevice->CreateInputLayout(layoutStandardInst, sizeLayout, shaderByteCode, sizeByteShaderCode, &this->layout);
-		break;
-	}
-
-	if (FAILED(result)) {
-		throw std::exception("InputLayout could not be created.");
-	}
 }
 
 VertexBuffer::~VertexBuffer() {
-	layout->Release();
 	buffer->Release();
 }
 

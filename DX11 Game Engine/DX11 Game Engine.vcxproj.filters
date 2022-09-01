@@ -154,6 +154,9 @@
     <Filter Include="GameEngine\GraphicsEngine\RenderSystem\InputLayout">
       <UniqueIdentifier>{6b61da9a-3fbc-4f97-8374-81fe43c4d9fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="App\Shaders\ShaderLayouts">
+      <UniqueIdentifier>{c75ba436-5f5a-4e23-a647-9b2c3b3359d2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppWindow.cpp">
@@ -347,7 +350,7 @@
     <ClInclude Include="Mesh.h">
       <Filter>GameEngine\GraphicsEngine\ResourceManager\MeshManager</Filter>
     </ClInclude>
-    <ClInclude Include="VertexMesh.h">
+    <ClInclude Include="Vertex.h">
       <Filter>GameEngine\Math</Filter>
     </ClInclude>
     <ClInclude Include="stb_image.h">
@@ -484,14 +487,14 @@
     <None Include="PixelShader.hlsl">
       <Filter>App\Shaders\BasicShader</Filter>
     </None>
-    <None Include="VertexMeshLayoutShader.hlsl">
-      <Filter>GameEngine\GraphicsEngine</Filter>
-    </None>
     <None Include="GrassPixelShader.hlsl">
       <Filter>App\Shaders\GrassShader</Filter>
     </None>
     <None Include="GrassVertexShader.hlsl">
       <Filter>App\Shaders\GrassShader</Filter>
+    </None>
+    <None Include="VertexLayoutShader.hlsl">
+      <Filter>App\Shaders\ShaderLayouts</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

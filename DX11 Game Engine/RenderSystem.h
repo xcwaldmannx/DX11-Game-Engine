@@ -9,11 +9,14 @@
 
 #include "VertexBuffer.h"
 #include "InstanceBuffer.h"
+#include "InputLayout.h"
 #include "IndexBuffer.h"
 #include "ConstantBuffer.h"
 
 #include "VertexShader.h"
 #include "PixelShader.h"
+
+struct InputElement;
 
 enum RASTER_MODE {
     RASTER_CULL_FRONT,
@@ -31,8 +34,9 @@ public:
 
     DeviceContextPtr getImmediateDeviceContext();
 
-    VertexBufferPtr createVertexBuffer(void* listVertices, UINT sizeVertex, UINT sizeList, INPUT_LAYOUT layout, void* shaderByteCode, UINT sizeByteShaderCode);
-    InstanceBufferPtr createInstanceBuffer(void* instances, UINT dataSize, UINT numInstances, void* shaderByteCode, UINT sizeByteShaderCode);
+    VertexBufferPtr createVertexBuffer(void* listVertices, UINT sizeVertex, UINT sizeList);
+    InstanceBufferPtr createInstanceBuffer(void* instances, UINT dataSize, UINT numInstances);
+    InputLayoutPtr createInputLayout(const std::vector<InputElement>& elements, const wchar_t* shaderFilename, const char* shaderEntrypoint);
     IndexBufferPtr createIndexBuffer(void* listIndices, UINT sizeList);
     ConstantBufferPtr createConstantBuffer(void* buffer, UINT sizeBuffer);
 
@@ -62,6 +66,7 @@ private:
     friend class SwapChain;
     friend class VertexBuffer;
     friend class InstanceBuffer;
+    friend class InputLayout;
     friend class IndexBuffer;
     friend class ConstantBuffer;
     friend class VertexShader;

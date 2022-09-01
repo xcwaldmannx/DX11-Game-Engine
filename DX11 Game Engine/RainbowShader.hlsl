@@ -6,16 +6,14 @@ struct PS_INPUT {
 	float3 worldPosition: POSITION1;
 };
 
-float3 Hue(float H)
-{
+float3 Hue(float H) {
 	float R = abs(H * 6 - 3) - 1;
 	float G = 2 - abs(H * 6 - 2);
 	float B = 2 - abs(H * 6 - 4);
 	return saturate(float3(R, G, B));
 }
 
-float3 HSVtoRGB(in float3 HSV)
-{
+float3 HSVtoRGB(in float3 HSV) {
 	return ((Hue(HSV.x) - 1) * HSV.y + 1) * HSV.z;
 }
 

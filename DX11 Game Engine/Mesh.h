@@ -7,7 +7,7 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 
-#include "VertexMesh.h"
+#include "Vertex.h"
 
 #include "Vec3f.h"
 
@@ -28,7 +28,7 @@ public:
 	const MaterialSlot getMaterialSlot(unsigned int slot);
 	size_t materialSlotCount();
 
-	std::vector<VertexMesh> getVertices();
+	std::vector<Vertex> getVertices();
 	std::vector<unsigned int> getIndices();
 
 public:
@@ -36,7 +36,7 @@ public:
 	const IndexBufferPtr& getIndexBufferBB();
 
 private:
-	std::vector<VertexMesh> vertices;
+	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
 
 	VertexBufferPtr vertexBuffer = nullptr;

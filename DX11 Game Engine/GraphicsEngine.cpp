@@ -30,7 +30,7 @@ GraphicsEngine::GraphicsEngine() {
 
     void* shaderByteCode = nullptr;
     size_t sizeShaderByteCode = 0;
-    renderSystem->compileVertexShader(L"VertexMeshLayoutShader.hlsl", "main", &shaderByteCode, &sizeShaderByteCode);
+    renderSystem->compileVertexShader(L"VertexLayoutShader.hlsl", "main", &shaderByteCode, &sizeShaderByteCode);
     memcpy(meshLayoutByteCode, shaderByteCode, sizeShaderByteCode);
     meshLayoutSize = sizeShaderByteCode;
     renderSystem->releaseCompiledShader();
@@ -95,7 +95,7 @@ void GraphicsEngine::setMaterial(const MaterialPtr& material) {
     GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPSTextureArray(0, material->textures, material->textureCount);
 }
 
-void GraphicsEngine::getVertexMeshLayoutShaderByteCodeAndSize(void** byteCode, size_t* size) {
+void GraphicsEngine::getVertexLayoutShaderData(void** byteCode, size_t* size) {
     *byteCode = meshLayoutByteCode;
     *size = meshLayoutSize;
 }

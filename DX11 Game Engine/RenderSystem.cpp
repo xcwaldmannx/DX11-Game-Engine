@@ -70,21 +70,30 @@ DeviceContextPtr RenderSystem::getImmediateDeviceContext() {
     return deviceContext;
 }
 
-VertexBufferPtr RenderSystem::createVertexBuffer(void* listVertices, UINT sizeVertex, UINT sizeList, INPUT_LAYOUT layout, void* shaderByteCode, UINT sizeByteShaderCode) {
+VertexBufferPtr RenderSystem::createVertexBuffer(void* listVertices, UINT sizeVertex, UINT sizeList) {
     VertexBufferPtr vbuffer = nullptr;
     try {
-        vbuffer = std::make_shared<VertexBuffer>(listVertices, sizeVertex, sizeList, layout, shaderByteCode, sizeByteShaderCode, this);
+        vbuffer = std::make_shared<VertexBuffer>(listVertices, sizeVertex, sizeList, this);
     } catch (...) {}
     return vbuffer;
 }
 
-InstanceBufferPtr RenderSystem::createInstanceBuffer(void* instances, UINT dataSize, UINT numInstances, void* shaderByteCode, UINT sizeByteShaderCode) {
+InstanceBufferPtr RenderSystem::createInstanceBuffer(void* instances, UINT dataSize, UINT numInstances) {
     InstanceBufferPtr ibuffer = nullptr;
     try {
-        ibuffer = std::make_shared<InstanceBuffer>(instances, dataSize, numInstances, shaderByteCode, sizeByteShaderCode, this);
+        ibuffer = std::make_shared<InstanceBuffer>(instances, dataSize, numInstances, this);
     }
     catch (...) {}
     return ibuffer;
+}
+
+InputLayoutPtr RenderSystem::createInputLayout(const std::vector<InputElement>& elements, const wchar_t* shaderFilename, const char* shaderEntrypoint) {
+    InputLayoutPtr layout = nullptr;
+    try {
+        layout = std::make_shared<InputLayout>(elements, shaderFilename, shaderEntrypoint, this);
+    }
+    catch (...) {}
+    return layout;
 }
 
 IndexBufferPtr RenderSystem::createIndexBuffer(void* listIndices, UINT sizeList) {

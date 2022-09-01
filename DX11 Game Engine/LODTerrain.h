@@ -10,12 +10,7 @@
 
 #include "Vec2f.h"
 #include "Vec3f.h"
-
-struct LODVertex {
-	Vec3f position;
-	Vec2f texcoord;
-	Vec3f normal;
-};
+#include "Vertex.h"
 
 struct LODChunk {
 	QTRect area;
@@ -23,7 +18,7 @@ struct LODChunk {
 	float** seed = nullptr;
 	float** terrainHeights = nullptr;
 
-	std::vector<LODVertex> vertices;
+	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
 
 	VertexBufferPtr vertexBuffer = nullptr;

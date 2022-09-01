@@ -3,7 +3,8 @@ struct VS_INPUT {
 	float2 texcoord: TEXCOORD0;
 	float3 normal: NORMAL0;
 
-	float3 offsets: TEXCOORD3;
+	float4 offsets: POSITION1;
+	float4 colors: COLOR0;
 };
 
 struct VS_OUTPUT {
@@ -11,7 +12,7 @@ struct VS_OUTPUT {
 	float2 texcoord: TEXCOORD0;
 	float3 normal: NORMAL0;
 
-	float3 worldPosition: POSITION1;
+	float4 colors: COLOR0;
 };
 
 cbuffer transform: register(b0) {
@@ -24,8 +25,9 @@ VS_OUTPUT main(VS_INPUT input) {
 
 	VS_OUTPUT output = (VS_OUTPUT)0;
 
-	input.position += float4(input.offsets, 0.0);
-	output.worldPosition = input.position.xyz;
+	input.offsets.w = 0.0;
+
+	input.position += input.offsets;
 
 	// world space coordinates
 	output.position = mul(input.position, world);
@@ -38,6 +40,8 @@ VS_OUTPUT main(VS_INPUT input) {
 
 	output.texcoord = float2(input.texcoord.x, 1.0 - input.texcoord.y);
 	output.normal = normalize(mul(input.normal, world));
+
+	output.colors = input.colors;
 
 	return output;
 }

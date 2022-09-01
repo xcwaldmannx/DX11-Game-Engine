@@ -40,6 +40,8 @@ std::vector<Vec3f> positions;
 void AppWindow::draw() {
     auto now = std::chrono::steady_clock::now();
 
+    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setLayout(inputLayout);
+
     // clear window color to specified
     GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->clearRenderTargetColor(swapchain, 0.5f, 0.0f, 1.0f, 1.0f);
 
@@ -90,7 +92,7 @@ void AppWindow::draw() {
         GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVSConstantBuffer(0, transformBuffer);
         GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(grassPixelShader);
         GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPSTexture(0, grassSystem->getTexture());
-        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexAndInstanceBuffer(grassSystem->getVertexBuffer(), grassSystem->getInstanceBuffer());
+        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setInstancedElementLayout(grassSystem->getVertexBuffer(), grassSystem->getInstanceBuffer(), grassSystem->getInputLayout());
         GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(grassSystem->getIndexBuffer());
         GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedInstanced(grassSystem->getIndexCount(), 500 * 500);
     }
@@ -340,6 +342,9 @@ void AppWindow::onCreate() {
 
     // END CREATE SHADERS
 
+    // INPUT LAYOUT
+    inputLayout = GraphicsEngine::get()->getRenderSystem()->createInputLayout(elements, L"VertexShader.hlsl", "main");
+
     // START CREATE MATERIALS
     skyMaterial = GraphicsEngine::get()->createMaterial(L"VertexShader.hlsl", L"SkyboxShader.hlsl", 1);
     skyMaterial->addTexture(sky);
@@ -574,5 +579,5 @@ void AppWindow::updateInputEvents() {
 
     // placing entities
     click = inputManager->getMouseState(InputManager::LMB_STATE) * 2 - 1;
-    canPlaceEntity = !inputManager->getMouseState(InputManager::LMB_STATE);
+    canPlaceEntity = inputManager->getMouseState(InputManager::LMB_STATE);
 }

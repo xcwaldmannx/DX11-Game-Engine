@@ -17,27 +17,32 @@ GrassSystem::GrassSystem(unsigned int numGrassBlades, LODTerrain* terrain) : num
 			float z = (float) j / 5.0f;
 			GrassInstance inst = {
 				Vec3f(x, terrain->getHeightAt(x, z), z),
+				Vec3f((float) i / (float) length, 1, 1),
 			};
 			instances.push_back(inst);
 		}
 	}
 
+	std::vector<InputElement> elements = {
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,  0, D3D11_INPUT_PER_VERTEX_DATA,   0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, 12, D3D11_INPUT_PER_VERTEX_DATA,   0 },
+		{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA,   0 },
 
-	void* shaderByteCode = nullptr;
-	size_t sizeShaderByteCode = 0;
+		{ "POSITION", 1, DXGI_FORMAT_R32G32B32_FLOAT, 1,  0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "COLOR",    0, DXGI_FORMAT_R32G32B32_FLOAT, 1, 12, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+	};
 
-	GraphicsEngine::get()->getRenderSystem()->compileVertexShader(L"GrassVertexShader.hlsl", "main", &shaderByteCode, &sizeShaderByteCode);
-	vertexBuffer = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer(&mesh->getVertices()[0], sizeof(GrassVertex), (UINT)mesh->getVertices().size(), VertexBuffer::INPUT_LAYOUT_STANDARD_INST, (UINT*)shaderByteCode, (UINT)sizeShaderByteCode);
-	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
-
-	GraphicsEngine::get()->getRenderSystem()->compileVertexShader(L"GrassVertexShader.hlsl", "main", &shaderByteCode, &sizeShaderByteCode);
-	instanceBuffer = GraphicsEngine::get()->getRenderSystem()->createInstanceBuffer(&instances[0], sizeof(GrassInstance), (UINT)instances.size(), (UINT*)shaderByteCode, (UINT)sizeShaderByteCode);
-	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
-
+	inputLayout = GraphicsEngine::get()->getRenderSystem()->createInputLayout(elements, L"GrassVertexShader.hlsl", "main");
+	vertexBuffer = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer(&mesh->getVertices()[0], sizeof(Vertex), (UINT)mesh->getVertices().size());
+	instanceBuffer = GraphicsEngine::get()->getRenderSystem()->createInstanceBuffer(&instances[0], sizeof(GrassInstance), (UINT)instances.size());
 	indexBuffer = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(&mesh->getIndices()[0], mesh->getIndices().size());
 }
 
 GrassSystem::~GrassSystem() {
+}
+
+const InputLayoutPtr& GrassSystem::getInputLayout() {
+	return inputLayout;
 }
 
 const VertexBufferPtr& GrassSystem::getVertexBuffer() {

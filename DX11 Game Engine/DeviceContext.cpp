@@ -5,6 +5,7 @@
 #include "SwapChain.h"
 #include "VertexBuffer.h"
 #include "InstanceBuffer.h"
+#include "InputLayout.h"
 #include "IndexBuffer.h"
 #include "ConstantBuffer.h"
 #include "VertexShader.h"
@@ -27,6 +28,10 @@ void DeviceContext::setViewportSize(UINT width, UINT height) {
 	viewport.MaxDepth = 1.0f;
 	deviceContext->RSSetViewports(1, &viewport);
 }
+
+//////////////////////////
+//     Draw Calls       //
+//////////////////////////
 
 void DeviceContext::clearRenderTargetColor(const SwapChainPtr& swapchain, float r, float g, float b, float a) {
 	FLOAT clearColor[] = {r, g, b, a};
@@ -65,24 +70,30 @@ void DeviceContext::drawIndexedInstanced(UINT indexCount, UINT instanceCount) {
 	deviceContext->DrawIndexedInstanced(indexCount, instanceCount, 0, 0, 0);
 }
 
+//////////////////////////
+//    Shader Setup      //
+//////////////////////////
+
 void DeviceContext::setVertexBuffer(const VertexBufferPtr& vertexBuffer) {
 	UINT stride = vertexBuffer->sizeVertex;
 	UINT offset = 0;
 	deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer->buffer, &stride, &offset);
-	deviceContext->IASetInputLayout(vertexBuffer->layout);
 }
 
 void DeviceContext::setVertexBuffer(const VertexBufferPtr& vertexBuffer, UINT* stride, UINT* offset) {
 	deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer->buffer, stride, offset);
-	deviceContext->IASetInputLayout(vertexBuffer->layout);
 }
 
-void DeviceContext::setVertexAndInstanceBuffer(const VertexBufferPtr& vertexBuffer, const InstanceBufferPtr& instanceBuffer) {
+void DeviceContext::setLayout(const InputLayoutPtr& inputLayout) {
+	deviceContext->IASetInputLayout(inputLayout->layout);
+}
+
+void DeviceContext::setInstancedElementLayout(const VertexBufferPtr& vertexBuffer, const InstanceBufferPtr& instanceBuffer, const InputLayoutPtr& inputLayout) {
 	ID3D11Buffer* array[2] = {vertexBuffer->buffer, instanceBuffer->buffer};
 	UINT strides[2] = {vertexBuffer->sizeVertex, instanceBuffer->dataSize};
 	UINT offsets[2] = {0, 0};
 	deviceContext->IASetVertexBuffers(0, 2, array, strides, offsets);
-	deviceContext->IASetInputLayout(vertexBuffer->layout);
+	deviceContext->IASetInputLayout(inputLayout->layout);
 }
 
 void DeviceContext::setIndexBuffer(const IndexBufferPtr& indexBuffer) {

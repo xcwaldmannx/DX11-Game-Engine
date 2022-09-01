@@ -75,7 +75,7 @@ Mesh::Mesh(const wchar_t* fullPath) : Resource(fullPath) {
 					Vec3f normal = Vec3f(nx, ny, nz);
 					logAxialMinAndMax(position);
 
-					VertexMesh vertex(position, texcoord, normal);
+					Vertex vertex(position, texcoord, normal);
 					vertices.push_back(vertex);
 					indices.push_back((unsigned int)(indexGlobalOffset + v));
 
@@ -92,9 +92,8 @@ Mesh::Mesh(const wchar_t* fullPath) : Resource(fullPath) {
 	void* shaderByteCode = nullptr;
 	size_t sizeShaderByteCode = 0;
 
-	GraphicsEngine::get()->getVertexMeshLayoutShaderByteCodeAndSize(&shaderByteCode, &sizeShaderByteCode);
-	vertexBuffer = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer(&vertices[0], sizeof(VertexMesh), (UINT) vertices.size(),
-		VertexBuffer::INPUT_LAYOUT_STANDARD, shaderByteCode, (UINT) sizeShaderByteCode);
+	GraphicsEngine::get()->getVertexLayoutShaderData(&shaderByteCode, &sizeShaderByteCode);
+	vertexBuffer = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer(&vertices[0], sizeof(Vertex), (UINT) vertices.size());
 
 	indexBuffer = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(&indices[0], (UINT) indices.size());
 
@@ -125,15 +124,13 @@ size_t Mesh::materialSlotCount() {
 	return materialSlots.size();
 }
 
-std::vector<VertexMesh> Mesh::getVertices() {
+std::vector<Vertex> Mesh::getVertices() {
 	return vertices;
 }
 
 std::vector<unsigned int> Mesh::getIndices() {
 	return indices;
 }
-
-std::vector<unsigned int> getIndices();
 
 const VertexBufferPtr& Mesh::getVertexBufferBB() {
 	return vertexBufferBB;
@@ -217,9 +214,7 @@ void Mesh::generateAABB() {
 	void* shaderByteCode = nullptr;
 	size_t sizeShaderByteCode = 0;
 
-	GraphicsEngine::get()->getVertexMeshLayoutShaderByteCodeAndSize(&shaderByteCode, &sizeShaderByteCode);
-	vertexBufferBB = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer(&verticesBB[0], sizeof(Vec3f), (UINT)verticesBB.size(),
-		VertexBuffer::INPUT_LAYOUT_STANDARD, shaderByteCode, (UINT)sizeShaderByteCode);
+	vertexBufferBB = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer(&verticesBB[0], sizeof(Vec3f), (UINT)verticesBB.size());
 
 	indexBufferBB = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(&indicesBB[0], (UINT)indicesBB.size());
 }

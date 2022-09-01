@@ -1,6 +1,8 @@
 #pragma once
 
 #include <d3d11.h>
+
+#include "RenderSystem.h"
 #include "Prerequisites.h"
 
 class DeviceContext {
@@ -21,7 +23,9 @@ public:
 	void setVertexBuffer(const VertexBufferPtr& vertexBuffer);
 	void setVertexBuffer(const VertexBufferPtr& vertexBuffer, UINT* stride, UINT* offset);
 
-	void setVertexAndInstanceBuffer(const VertexBufferPtr& vertexBuffer, const InstanceBufferPtr& instanceBuffer);
+	void setLayout(const InputLayoutPtr& inputLayout);
+
+	void setInstancedElementLayout(const VertexBufferPtr& vertexBuffer, const InstanceBufferPtr& instanceBuffer, const InputLayoutPtr& inputLayout);
 
 	void setIndexBuffer(const IndexBufferPtr& indexBuffer);
 

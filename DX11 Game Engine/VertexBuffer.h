@@ -4,18 +4,12 @@
 
 #include "Prerequisites.h"
 
-typedef unsigned int INPUT_LAYOUT;
-
 class VertexBuffer {
 public:
-	VertexBuffer(void* listVertices, UINT sizeVertex, UINT sizeList, INPUT_LAYOUT inputLayout, void* shaderByteCode, UINT sizeByteShaderCode, RenderSystem* renderSystem);
+	VertexBuffer(void* listVertices, UINT sizeVertex, UINT sizeList, RenderSystem* renderSystem);
 	~VertexBuffer();
 
 	UINT getSizeVertexList();
-
-public:
-	const static INPUT_LAYOUT INPUT_LAYOUT_STANDARD = 0;
-	const static INPUT_LAYOUT INPUT_LAYOUT_STANDARD_INST = 1;
 
 private:
 	D3D11_INPUT_ELEMENT_DESC layoutStandard[3] = {
@@ -41,7 +35,6 @@ private:
 	UINT sizeList = 0;
 
 	ID3D11Buffer* buffer = nullptr;
-	ID3D11InputLayout* layout = nullptr;
 
 	friend class DeviceContext;
 };

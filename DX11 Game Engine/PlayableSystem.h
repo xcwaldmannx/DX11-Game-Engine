@@ -11,8 +11,5 @@
 
 class PlayableSystem : public System {
 public:
-	PlayableSystem();
-	~PlayableSystem();
-
 	void update(long double deltaTime);
 };

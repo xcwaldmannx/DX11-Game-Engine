@@ -4,21 +4,17 @@
 
 #include "ConstantBufferTypes.h"
 
-#include "VertexBuffer.h"
-
 #include "LODTerrain.h"
+
+#include "VertexBuffer.h"
 
 #include "Vec2f.h"
 #include "Vec3f.h"
-
-struct GrassVertex {
-	Vec3f position;
-	Vec2f texcoord;
-	Vec3f normal;
-};
+#include "Vertex.h"
 
 struct GrassInstance {
 	Vec3f offset;
+	Vec3f color;
 };
 
 class GrassSystem {
@@ -26,6 +22,7 @@ public:
 	GrassSystem(unsigned int numGrassBlades, LODTerrain* terrain);
 	~GrassSystem();
 
+	const InputLayoutPtr& getInputLayout();
 	const VertexBufferPtr& getVertexBuffer();
 	const InstanceBufferPtr& getInstanceBuffer();
 	const IndexBufferPtr& getIndexBuffer();
@@ -39,12 +36,13 @@ private:
 	unsigned int numGrassBlades;
 	LODTerrain* terrain;
 
-	std::vector<GrassVertex> vertices;
+	std::vector<Vertex> vertices;
 	std::vector<GrassInstance> instances;
 
 	MeshPtr mesh = nullptr;
 	TexturePtr texture = nullptr;
 
+	InputLayoutPtr inputLayout = nullptr;
 	VertexBufferPtr vertexBuffer = nullptr;
 	InstanceBufferPtr instanceBuffer = nullptr;
 	IndexBufferPtr indexBuffer = nullptr;

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Prerequisites.h"
 #include "Mat4f.h"
 #include "Window.h"
 #include "LODTerrain.h"

@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "VertexMesh.h"
+#include "Vertex.h"
 
 class Resource {
 public:
@@ -11,7 +11,7 @@ public:
 	virtual ~Resource();
 protected:
 	std::wstring fullPath{};
-	std::vector<VertexMesh> vertices;
+	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
 };
 
