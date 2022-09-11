@@ -30,6 +30,8 @@
 
 #include "LODTerrain.h"
 
+#include "InputLayoutDescriptor.h"
+
 class AppWindow : public Window {
 public:
     AppWindow();
@@ -82,7 +84,8 @@ private:
     PixelShaderPtr grassPixelShader = nullptr;
 
     // Terrain
-    LODTerrain* lodTerrain = new LODTerrain(32, 32, 1024);
+    float viewDistance = 2048.0f;
+    LODTerrain* lodTerrain = new LODTerrain(100, 100, 512);
     TexturePtr grassTexture = nullptr, dirtTexture = nullptr, pathTexture = nullptr, pathmapTexture = nullptr, heightmapTexture = nullptr;
     TextureArrayPtr terrainTextures = nullptr;
 
@@ -135,7 +138,7 @@ private:
     float up = 0.0f;
 
     // camera matrices
-    Camera camera{nullptr};
+    Camera camera{nullptr, 0};
 
     // play state or non-play state indication
     bool playState = false;
@@ -160,6 +163,7 @@ private:
         { "POSITION", 1, DXGI_FORMAT_R32G32B32_FLOAT, 1,  0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
     };
 
+    InputLayoutDescriptor inputLayoutDesc{};
     InputLayoutPtr inputLayout = nullptr;
 
 };

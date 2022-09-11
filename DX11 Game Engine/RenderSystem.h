@@ -36,7 +36,7 @@ public:
 
     VertexBufferPtr createVertexBuffer(void* listVertices, UINT sizeVertex, UINT sizeList);
     InstanceBufferPtr createInstanceBuffer(void* instances, UINT dataSize, UINT numInstances);
-    InputLayoutPtr createInputLayout(const std::vector<InputElement>& elements, const wchar_t* shaderFilename, const char* shaderEntrypoint);
+    InputLayoutPtr createInputLayout(const std::vector<D3D11_INPUT_ELEMENT_DESC>& elements, const wchar_t* shaderFilename, const char* shaderEntrypoint);
     IndexBufferPtr createIndexBuffer(void* listIndices, UINT sizeList);
     ConstantBufferPtr createConstantBuffer(void* buffer, UINT sizeBuffer);
 

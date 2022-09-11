@@ -100,14 +100,10 @@ void AppWindow::draw() {
     // LODTerrain
     if (lodTerrain) {
         updateTerrain();
+        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setLayout(inputLayout);
         GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPSTextureArray(0, terrainTextures, terrainTextures->size());
 
-        float size = 2048.0f;
-        QTRect area = {
-            { camera.getWorldPosition().x - (size / 2.0f), camera.getWorldPosition().z - (size / 2.0f) },
-            { size, size },
-        };
-        lodTerrain->setViewArea(area);
+        lodTerrain->setCameraToTrack(&camera, viewDistance);
         lodTerrain->loadChunks();
         lodTerrain->draw(vertexShader, terrainPS, transformBuffer, lightingBuffer);
     }
@@ -136,7 +132,7 @@ void AppWindow::updateSkybox() {
     TransformBuffer transBuffer;
 
     transBuffer.world.setIdentity();
-    transBuffer.world.setScale(Vec3f(4000.0f, 4000.0f, 4000.0f));
+    transBuffer.world.setScale(Vec3f(viewDistance - 100.0f, viewDistance - 100.0f, viewDistance - 100.0f));
     transBuffer.world.setTranslation(camera.getWorld().getTranslation());
     transBuffer.view = camera.getView();
     transBuffer.proj = camera.getProj();
@@ -343,7 +339,11 @@ void AppWindow::onCreate() {
     // END CREATE SHADERS
 
     // INPUT LAYOUT
-    inputLayout = GraphicsEngine::get()->getRenderSystem()->createInputLayout(elements, L"VertexShader.hlsl", "main");
+    inputLayoutDesc.addElement(ILD_TYPE_POSITION, 0, 0, ILD_INPUT_VERTEX,  0);
+    inputLayoutDesc.addElement(ILD_TYPE_TEXCOORD, 0, 0, ILD_INPUT_VERTEX,  0);
+    inputLayoutDesc.addElement(ILD_TYPE_NORMAL,   0, 0, ILD_INPUT_VERTEX,  0);
+    inputLayoutDesc.addElement(ILD_TYPE_POSITION, 1, 1, ILD_INPUT_INSTANCE, 1);
+    inputLayout = GraphicsEngine::get()->getRenderSystem()->createInputLayout(inputLayoutDesc.getLayout(), L"VertexShader.hlsl", "main");
 
     // START CREATE MATERIALS
     skyMaterial = GraphicsEngine::get()->createMaterial(L"VertexShader.hlsl", L"SkyboxShader.hlsl", 1);
@@ -383,7 +383,7 @@ void AppWindow::onCreate() {
     grassSystem = new GrassSystem(500 * 500, lodTerrain);
     
     // Camera
-    camera = Camera{lodTerrain};
+    camera = Camera{lodTerrain, viewDistance};
     camera.getWorld().setTranslation(Vec3f(16, 256, 16));
 
     for (int i = 0; i < 256; i++) {

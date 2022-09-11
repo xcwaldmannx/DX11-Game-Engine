@@ -3,8 +3,13 @@
 #include <mutex>
 #include <thread>
 #include <atomic>
+#include <unordered_map>
+
+#include <algorithm>
 
 #include "StaticQuadTree.h"
+#include "LODSystem.h"
+#include "Camera.h"
 
 #include "VertexBuffer.h"
 
@@ -12,8 +17,16 @@
 #include "Vec3f.h"
 #include "Vertex.h"
 
+class Camera;
+
 struct LODChunk {
+
+	LODChunk() : radius{ {0, 0}, 0, 0 } {
+
+	}
+
 	QTRect area;
+	LODRadius radius;
 
 	float** seed = nullptr;
 	float** terrainHeights = nullptr;
@@ -42,12 +55,14 @@ public:
 	LODTerrain(unsigned int lengthX, unsigned int lengthZ, unsigned int terrainSize);
 	~LODTerrain();
 
-	void setViewArea(const QTRect& area);
+	void setCameraToTrack(Camera* camera, unsigned int searchAreaSize);
 
 	void initChunks();
 	void loadInitData(LODChunk* chunk);
 	void loadChunks();
+	void unloadChunk(LODChunk* chunk);
 	void generateChunk(LODChunk* chunk);
+	void generateChunkAtLOD(LODChunk* chunk, const unsigned int lod);
 
 	std::vector<LODChunk*> getChunks(const QTRect& area);
 
@@ -75,6 +90,17 @@ private:
 	}
 
 private:
+	std::unordered_map<unsigned int, unsigned int> lodLevels = {
+		{1, 1},
+		{2, 2},
+		{3, 4},
+		{4, 8},
+		{5, 16},
+		{6, 32},
+		{7, 64},
+	};
+
+private:
 	// Terrain
 	unsigned int m_lengthX = 0;
 	unsigned int m_lengthZ = 0;
@@ -82,10 +108,19 @@ private:
 	LODChunk*** m_chunks;
 
 	// QuadTree
-	QTRect m_quadArea{};
+	Camera* m_camera = nullptr;
+	unsigned int m_searchAreaSize = 0;
 	QTRect m_searchArea{};
+	QTRect m_quadArea{};
 	StaticQuadTree<LODChunk*> m_quadtree;
+
+	// chunk data
 	std::vector<LODChunk*> m_searchedChunks;
+	std::vector<LODChunk*> m_allChunks;
+	std::vector<LODChunk*> m_diffInChunkVectors;
+
+	// lod levels
+	LODSystem* lodSystem = nullptr;
 
 	// Threading
 	std::mutex m_mutex;

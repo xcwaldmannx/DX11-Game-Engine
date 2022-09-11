@@ -87,7 +87,7 @@ InstanceBufferPtr RenderSystem::createInstanceBuffer(void* instances, UINT dataS
     return ibuffer;
 }
 
-InputLayoutPtr RenderSystem::createInputLayout(const std::vector<InputElement>& elements, const wchar_t* shaderFilename, const char* shaderEntrypoint) {
+InputLayoutPtr RenderSystem::createInputLayout(const std::vector<D3D11_INPUT_ELEMENT_DESC>& elements, const wchar_t* shaderFilename, const char* shaderEntrypoint) {
     InputLayoutPtr layout = nullptr;
     try {
         layout = std::make_shared<InputLayout>(elements, shaderFilename, shaderEntrypoint, this);

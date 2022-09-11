@@ -5,6 +5,8 @@
 
 #include "Mesh.h"
 
+#include "InputLayoutDescriptor.h"
+
 GrassSystem::GrassSystem(unsigned int numGrassBlades, LODTerrain* terrain) : numGrassBlades(numGrassBlades), terrain(terrain) {
 	mesh = GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets/Meshes/grasstuft.obj");
 	texture = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets/Textures/grass_tuft.png");
@@ -23,16 +25,14 @@ GrassSystem::GrassSystem(unsigned int numGrassBlades, LODTerrain* terrain) : num
 		}
 	}
 
-	std::vector<InputElement> elements = {
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,  0, D3D11_INPUT_PER_VERTEX_DATA,   0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, 12, D3D11_INPUT_PER_VERTEX_DATA,   0 },
-		{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA,   0 },
+	InputLayoutDescriptor inputLayoutDesc{};
+	inputLayoutDesc.addElement(ILD_TYPE_POSITION, 0, 0, ILD_INPUT_VERTEX, 0);
+	inputLayoutDesc.addElement(ILD_TYPE_TEXCOORD, 0, 0, ILD_INPUT_VERTEX, 0);
+	inputLayoutDesc.addElement(ILD_TYPE_NORMAL,   0, 0, ILD_INPUT_VERTEX, 0);
+	inputLayoutDesc.addElement(ILD_TYPE_POSITION, 1, 1, ILD_INPUT_INSTANCE, 1);
+	inputLayoutDesc.addElement(ILD_TYPE_COLOR,    0, 1, ILD_INPUT_INSTANCE, 1);
 
-		{ "POSITION", 1, DXGI_FORMAT_R32G32B32_FLOAT, 1,  0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "COLOR",    0, DXGI_FORMAT_R32G32B32_FLOAT, 1, 12, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-	};
-
-	inputLayout = GraphicsEngine::get()->getRenderSystem()->createInputLayout(elements, L"GrassVertexShader.hlsl", "main");
+	inputLayout = GraphicsEngine::get()->getRenderSystem()->createInputLayout(inputLayoutDesc.getLayout(), L"GrassVertexShader.hlsl", "main");
 	vertexBuffer = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer(&mesh->getVertices()[0], sizeof(Vertex), (UINT)mesh->getVertices().size());
 	instanceBuffer = GraphicsEngine::get()->getRenderSystem()->createInstanceBuffer(&instances[0], sizeof(GrassInstance), (UINT)instances.size());
 	indexBuffer = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(&mesh->getIndices()[0], mesh->getIndices().size());

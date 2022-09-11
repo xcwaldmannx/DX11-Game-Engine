@@ -161,8 +161,11 @@
     <ClInclude Include="AppWindow.h" />
     <ClInclude Include="GrassSystem.h" />
     <ClInclude Include="InputLayout.h" />
+    <ClInclude Include="InputLayoutDescriptor.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="InstanceBuffer.h" />
+    <ClInclude Include="LODRadius.h" />
+    <ClInclude Include="LODSystem.h" />
     <ClInclude Include="LODTerrain.h" />
     <ClInclude Include="MousePicker.h" />
     <ClInclude Include="PerlinNoise.h" />
@@ -191,6 +194,7 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshManager.h" />
     <ClInclude Include="PointLightSystem.h" />
+    <ClInclude Include="QTRect.h" />
     <ClInclude Include="StaticQuadTree.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
@@ -234,6 +238,7 @@
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="InputLayout.cpp" />
+    <ClCompile Include="InputLayoutDescriptor.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="InputSystem.cpp" />
     <ClCompile Include="InstanceBuffer.cpp" />
@@ -248,10 +253,6 @@
     <ClCompile Include="PickableSystem.cpp" />
     <ClCompile Include="PlayableSystem.cpp" />
     <ClCompile Include="PointLightSystem.cpp" />
-    <ClCompile Include="StaticQuadTree.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="TextureArray.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="ThreadRegulator.cpp" />

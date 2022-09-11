@@ -157,6 +157,12 @@
     <Filter Include="App\Shaders\ShaderLayouts">
       <UniqueIdentifier>{c75ba436-5f5a-4e23-a647-9b2c3b3359d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DataStructures\LODTree">
+      <UniqueIdentifier>{0912f039-8eab-44fb-8087-5e1c2138c97f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\InputLayout\Descriptor">
+      <UniqueIdentifier>{cff7d7e3-4eef-47c1-ab13-88ff474f4367}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppWindow.cpp">
@@ -270,14 +276,14 @@
     <ClCompile Include="InstanceBuffer.cpp">
       <Filter>GameEngine\GraphicsEngine\RenderSystem\InstanceBuffer</Filter>
     </ClCompile>
-    <ClCompile Include="StaticQuadTree.cpp">
-      <Filter>DataStructures\QuadTree</Filter>
-    </ClCompile>
     <ClCompile Include="LODTerrain.cpp">
       <Filter>GameEngine\TerrainSystem</Filter>
     </ClCompile>
     <ClCompile Include="InputLayout.cpp">
       <Filter>GameEngine\GraphicsEngine\RenderSystem\InputLayout</Filter>
+    </ClCompile>
+    <ClCompile Include="InputLayoutDescriptor.cpp">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\InputLayout\Descriptor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -466,6 +472,18 @@
     </ClInclude>
     <ClInclude Include="InputLayout.h">
       <Filter>GameEngine\GraphicsEngine\RenderSystem\InputLayout</Filter>
+    </ClInclude>
+    <ClInclude Include="QTRect.h">
+      <Filter>DataStructures\QuadTree</Filter>
+    </ClInclude>
+    <ClInclude Include="LODSystem.h">
+      <Filter>DataStructures\LODTree</Filter>
+    </ClInclude>
+    <ClInclude Include="LODRadius.h">
+      <Filter>DataStructures\LODTree</Filter>
+    </ClInclude>
+    <ClInclude Include="InputLayoutDescriptor.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\InputLayout\Descriptor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

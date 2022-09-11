@@ -4,9 +4,11 @@
 #include "Window.h"
 #include "LODTerrain.h"
 
+class LODTerrain;
+
 class Camera {
 public:
-	Camera(LODTerrain* terrain);
+	Camera(LODTerrain* terrain, float viewDistance);
 	~Camera();
 
 	void updateView(Window* window, long double deltaTime);
@@ -24,6 +26,7 @@ private:
 
 	// terrain
 	LODTerrain* terrain;
+	float viewDistance;
 
 	// view
 	Mat4f m_worldCamera{};

@@ -4,7 +4,7 @@
 
 #include "InputSystem.h"
 
-Camera::Camera(LODTerrain* terrain) : terrain(terrain) {
+Camera::Camera(LODTerrain* terrain, float viewDistance) : terrain(terrain), viewDistance(viewDistance) {
 }
 
 Camera::~Camera() {
@@ -26,7 +26,7 @@ void Camera::updateView(Window* window, long double deltaTime) {
     temp.setRotationY(m_rotY);
     camera *= temp;
 
-    float speed = 5.0f * deltaTime;
+    float speed = 25.0f * deltaTime;
 
     Vec3f camPosX;
     Vec3f camPosY;
@@ -36,7 +36,7 @@ void Camera::updateView(Window* window, long double deltaTime) {
     float terrainHeight = 0;
 
     if (m_flyingMode) {
-        speed = 100.0f * deltaTime;
+        speed = 1000.0f * deltaTime;
         camPosX = camera.getXDirection() * (m_right * speed);
         camPosY = camera.getYDirection() * (m_up * speed);
         camPosZ = camera.getZDirection() * (m_forward * speed);
@@ -78,7 +78,7 @@ void Camera::updateView(Window* window, long double deltaTime) {
     int height = window->getWindowRect().bottom - window->getWindowRect().top;
     float aspect = (float)width / (float)height;
 
-    m_projCamera.setPerspective(1.57f, aspect, 0.1f, 4096.0f);
+    m_projCamera.setPerspective(1.57f, aspect, 0.1f, viewDistance);
 
 
 }

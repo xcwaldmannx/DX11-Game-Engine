@@ -17,7 +17,7 @@ struct InputElement {
 
 class InputLayout {
 public:
-	InputLayout(const std::vector<InputElement>& elements, const wchar_t* shaderFilename, const char* shaderEntrypoint, RenderSystem* renderSystem);
+	InputLayout(const std::vector<D3D11_INPUT_ELEMENT_DESC>& elements, const wchar_t* shaderFilename, const char* shaderEntrypoint, RenderSystem* renderSystem);
 	~InputLayout();
 
 private:
